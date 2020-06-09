@@ -19,10 +19,9 @@ public class Main {
 		while (c.getPlayerWon() == 0)
 		{
 			System.out.println();
-			String befehl = "";
 			if (yourTurn)
 			{
-				befehl = sc.nextLine();
+				String befehl = sc.nextLine();
 				c.setChip(Integer.valueOf(befehl));
 			}
 			yourTurn = !yourTurn;

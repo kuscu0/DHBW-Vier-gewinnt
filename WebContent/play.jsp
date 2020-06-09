@@ -9,8 +9,14 @@
 </head>
 <body>
 
+	<jsp:useBean id="control" class="bean.Control"> 
+	</jsp:useBean>
+
+
+	
+
 	<div id="gameCanvas" class="gameCanvas"></div>
 	
-<script src="js/display.js"></script>
+	<script src="js/display.js"></script>
 </body>
 </html>

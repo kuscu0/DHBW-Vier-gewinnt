@@ -13,6 +13,7 @@ function createTable(tablaData , parentNode ){
 		var btn = document.createElement("button")
 		btn.innerHTML = "Spalte #" + (i+1);
 		btn.id = ("btn_spalte_" + i)
+		btn.action = 
 		tField.appendChild(btn);
 		tRow.appendChild(tField)
 	}
