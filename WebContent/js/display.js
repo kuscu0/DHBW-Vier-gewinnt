@@ -5,7 +5,8 @@ function removeAllChildNodes(parentNode){
 }
 function createTable(tablaData , parentNode ){
 	var table = document.createElement("table");
-	table.setAttribute("style", "background-color: #0000FF;")
+	table.setAttribute("style", "background-color: #0000FF;" +
+								"border-radius: 20px;")
 	var tRow = document.createElement("tr");
 	for (i=0; i<7;i++){
 		var tField = document.createElement("th")
@@ -38,13 +39,22 @@ function createTable(tablaData , parentNode ){
 
 function getSource(index){
 	if (index == 1){
-		return "../res/yellow.png";
+		return "res/yellow.png";
 	}else if(index == 2){
-		return "../res/red.png";
+		return "res/red.png";
 	}
-	else return "../res/gray.png"
+	else return "res/gray.png"
 }
 
 
 
-removeAllChildNodes(document.getElementById("gameContainer"));
+removeAllChildNodes(document.getElementById("gameCanvas"));
+var testTableData = [
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[1,1,1,1,2,2,2]
+];
+createTable(testTableData,document.getElementById("gameCanvas"));

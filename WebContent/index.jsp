@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %><!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -10,17 +10,14 @@
 <body>
 <h1>Vier gewinnt</h1>
 <div class="menu">
-  <button class="button compBtn" id="compBtn">Spieler gegen Computer</button>
+  <button class="button compBtn" id="playBtn">Spieler gegen Computer</button>
   <button class="button twoPlayersBtn" id="2playersBtn">2 Spieler</button>
   <button class="button onlineBtn" id="onlineBtn">Online-Match</button>
   <button class="button settingsBtn" id="settingsBtn">Einstellungen</button>
   <button class="button aboutBtn" id="aboutBtn">Über...</button>
 </div>
 
-<div id="gameContainer"></div>
-
 <script src="js/functions.js"></script>
-<script src="js/gamedisplay.js"></script>
 </body>
 </html>
 <!--
