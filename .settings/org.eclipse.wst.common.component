@@ -6,7 +6,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
                 
         <property name="context-root" value="DHBW-Vier-gewinnt"/>
-                
         <property name="java-output-path" value="/DHBW-Vier-gewinnt/build/classes"/>
             
     </wb-module>
