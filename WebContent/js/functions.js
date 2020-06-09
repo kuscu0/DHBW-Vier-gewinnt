@@ -1,6 +1,13 @@
-document.getElementById('compBtn').onclick = function(){
-    location.href='play/comp.html';
-}
+var testTableData = [
+	[0,0,0,0,0,0,0],
+	[0,0,0,2,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[1,1,1,1,2,2,2]
+];
+
+document.getElementById('compBtn').onclick = createTable(testTableData, document.getElementById("gameContainer"));
 
 document.getElementById('2playersBtn').onclick = function(){
     location.href='play/2players.html';

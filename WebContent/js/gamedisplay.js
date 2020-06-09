@@ -48,12 +48,3 @@ function getSource(index){
 
 
 removeAllChildNodes(document.getElementById("gameContainer"));
-var testTableData = [
-	[0,0,0,0,0,0,0],
-	[0,0,0,2,0,0,0],
-	[0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0],
-	[1,1,1,1,2,2,2]
-];
-createTable(testTableData,document.getElementById("gameContainer"));

@@ -17,7 +17,10 @@
   <button class="button aboutBtn" id="aboutBtn">Über...</button>
 </div>
 
+<div id="gameContainer"></div>
+
 <script src="js/functions.js"></script>
+<script src="js/gamedisplay.js"></script>
 </body>
 </html>
 <!--
