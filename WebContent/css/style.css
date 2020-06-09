@@ -84,6 +84,20 @@ h1 {
     width: 3.5% !important;
 }
 
+.insertChipBtn {
+	width: 0;
+	height: 0;
+	border: none;
+	border-left: 25px solid #191919;
+	border-right: 25px solid #191919;
+	border-top: 50px solid lightgreen;
+	float: left;
+}
+
+.insertChipBtn:hover {
+	background-color: green;
+}
+
 .menu .button:hover {
     background-color: RoyalBlue;
 }
