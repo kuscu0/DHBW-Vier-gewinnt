@@ -9,12 +9,15 @@
 </head>
 <body>
 <h1>Vier gewinnt</h1>
+
 <div class="menu">
-  <button class="button compBtn" id="playBtn">Spieler gegen Computer</button>
-  <button class="button twoPlayersBtn" id="2playersBtn">2 Spieler</button>
-  <button class="button onlineBtn" id="onlineBtn">Online-Match</button>
-  <button class="button settingsBtn" id="settingsBtn">Einstellungen</button>
-  <button class="button aboutBtn" id="aboutBtn">Über...</button>
+	<form action="play" method="post">
+		<button class="button compBtn" id="playBtn">Spieler gegen Computer</button>
+		<button class="button twoPlayersBtn" id="2playersBtn">2 Spieler</button>
+		<button class="button onlineBtn" id="onlineBtn">Online-Match</button>
+		<button class="button settingsBtn" id="settingsBtn">Einstellungen</button>
+		<button class="button aboutBtn" id="aboutBtn">Über...</button>
+	</form>
 </div>
 
 <script src="js/functions.js"></script>

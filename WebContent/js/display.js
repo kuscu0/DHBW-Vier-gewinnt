@@ -10,11 +10,16 @@ function createTable(tablaData , parentNode ){
 	var tRow = document.createElement("tr");
 	for (i=0; i<7;i++){
 		var tField = document.createElement("th")
+		var form = document.createElement("form");
+		form.action="play";
+		form.method="post";
 		var btn = document.createElement("button")
 		btn.innerHTML = "Spalte #" + (i+1);
-		btn.id = ("btn_spalte_" + i)
-		btn.action = 
-		tField.appendChild(btn);
+		// btn.id = ("btn_spalte_" + i)
+		btn.name = ("insertbtn")
+		btn.value = i
+		form.appendChild(btn);
+		tField.appendChild(form);
 		tRow.appendChild(tField)
 	}
 	table.appendChild(tRow);
@@ -49,13 +54,4 @@ function getSource(index){
 
 
 
-removeAllChildNodes(document.getElementById("gameCanvas"));
-var testTableData = [
-	[0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0],
-	[1,1,1,1,2,2,2]
-];
-createTable(testTableData,document.getElementById("gameCanvas"));
+

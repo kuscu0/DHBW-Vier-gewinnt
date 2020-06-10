@@ -1,5 +1,6 @@
 package bean;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -27,6 +28,8 @@ public class Main {
 			yourTurn = !yourTurn;
 			
 			int[][] field = c.getField();
+			// Zu Test Zwecken
+			// System.out.println("Field: " + Arrays.deepToString(c.getField()));
 			
 			for (int[] row : field)
 			{
