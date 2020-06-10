@@ -54,4 +54,12 @@ function getSource(index){
 
 
 
-
+removeAllChildNodes(document.getElementById("gameCanvas"));
+var emptyTable = [
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0]
+];
