@@ -3,8 +3,8 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Scanner;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,12 +14,11 @@ import bean.Control;
 
 
 public class Play extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
-
-
-    Control c = new Control();
-    int turns = 0;
+	private static final long serialVersionUID = 2893048395274292624L;
+	
+	
+	Control c = new Control();
+    boolean yourTurn = true;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -35,48 +34,41 @@ public class Play extends HttpServlet {
 		            		"<title>Vier gewinnt</title>" +
 		            	"</head>" +
 		            	"<body>" +
-		            		"<jsp:useBean id=\"control\" class=\"bean.Control\">" +
-		            		"</jsp:useBean>" +
 		            		"<div id=\"gameCanvas\"></div>" +
 		            		"<script src=\"js/display.js\"></script>" +
 		            		"<script>");
 
 
-        if (turns == 0) {
-            c.newRound(true);
-        }
+        
+        if(request.getParameter("insertbtn") != null) {
+        	if (c.getPlayerWon() == 0) {
+        		
+                c.setChip(Integer.parseInt(request.getParameter("insertbtn")), 1);
+                System.out.println("SPIELER setzt auf " + Integer.parseInt(request.getParameter("insertbtn")));
+            	
+                c.botRound();
+                
+        	}
+        } else {
+        	c.newRound(true);
+    	}
 
-        // The Actual game
-
-        boolean yourTurn = true;
-        int[][] field = null;
-
-        if (c.getPlayerWon() == 0) {
-
-            if (yourTurn && request.getParameter("insertbtn") != null) {
-                c.setChip(Integer.parseInt(request.getParameter("insertbtn")));
-                turns++;
-                System.out.println(turns);
-                yourTurn = !yourTurn;
-
-                field = c.getField();
-                out.println(	"var gameTable = " + Arrays.deepToString(field) + ";" +
-                				"createTable(gameTable, document.getElementById(\"gameCanvas\"));");
-
-                c.nextRound();
-            } else {
-                out.println(	"createTable(emptyTable, document.getElementById(\"gameCanvas\"));");
-            }
-        }
-
-        out.println(		"</script>" +
-        				"</body>" +
+        out.println(			"var gameTable = " + Arrays.deepToString(c.getField()) + ";" +
+								"createTable(gameTable, document.getElementById(\"gameCanvas\"));</script>");
+        
+        if(c.getPlayerWon() == 1){
+    		out.println("<script>removeButtons();</script>" +
+    					"<h1>Du hast das Spiel gewonnen!</h1>");
+    	} else if(c.getPlayerWon() == 2) {
+    		out.println("<script>removeButtons();</script>" +
+    					"<h1>Der Bot hat das Spiel gewonnen :(</h1>");
+    	}
+        
+        out.println(	"</body>" +
         			"</html>");
         out.close();
 
         // System.out.println(c.getPlayerWonToString());
-
-        //Game end
 
     }
 

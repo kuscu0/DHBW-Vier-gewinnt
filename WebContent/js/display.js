@@ -14,8 +14,8 @@ function createTable(tablaData , parentNode ){
 		form.action="play";
 		form.method="post";
 		var btn = document.createElement("button")
-		btn.innerHTML = "Spalte #" + (i+1);
-		// btn.id = ("btn_spalte_" + i)
+		btn.innerHTML = "VVV";
+		btn.id = ("btn_spalte_" + i)
 		btn.name = ("insertbtn")
 		btn.value = i
 		form.appendChild(btn);
@@ -41,13 +41,23 @@ function createTable(tablaData , parentNode ){
 	parentNode.appendChild(table);
 }
 
+function removeButton(id) {
+	var btn = document.getElementById(id);
+	btn.remove();
+}
 
+function removeButtons() {
+	for (i=0; i<7;i++) {
+		var btn = document.getElementById("btn_spalte_" + i);
+		btn.remove();
+	}
+}
 
 function getSource(index){
 	if (index == 1){
-		return "res/yellow.png";
-	}else if(index == 2){
 		return "res/red.png";
+	}else if(index == 2){
+		return "res/yellow.png";
 	}
 	else return "res/gray.png"
 }

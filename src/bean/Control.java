@@ -25,25 +25,26 @@ public class Control
 		playerWon = 0;
 	}
 	
-	
-	public void nextRound()
-	{
-		if (activePlayer == 1) 
-		{
-			activePlayer = 2;
-			if (bot != null)
-			{
-				bot.nextRound(lastColumn, lastRow);
-			}
+	public void botRound() {
+		if (bot != null) {
+			bot.nextRound(lastColumn, lastRow);
 		}
-		else activePlayer = 1;
+	}
+	
+	public void nextRound() {
+		if (activePlayer == 1) {
+			activePlayer = 2;
+			botRound();
+		} else {
+			activePlayer = 1;
+		}
 	}
 
-	public boolean setChip(int column)
+	public boolean setChip(int column, int activePlayer)
 	{	
 		round++;
 		
-		int chip = activePlayer;
+		int chipColor = activePlayer;
 		
 		if (round <= WIDTH * HEIGHT && playerWon == 0)
 		{
@@ -51,10 +52,10 @@ public class Control
 			{
 				if (field[row][column] == 0)
 				{
-					field[row][column] = chip;
+					field[row][column] = chipColor;
 					lastColumn = column;
 					lastRow = row;
-					return checkGewonnen(column, row, chip);
+					return checkGewonnen(column, row, chipColor);
 				}
 			}
 		}

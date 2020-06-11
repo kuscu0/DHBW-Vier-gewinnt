@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
+        
         Control c = new Control();
         c.newRound(true);
 
@@ -20,7 +20,7 @@ public class Main {
             System.out.println();
             if (yourTurn) {
                 String befehl = sc.nextLine();
-                c.setChip(Integer.valueOf(befehl));
+                c.setChip(Integer.valueOf(befehl), 1);
             }
             yourTurn = !yourTurn;
 

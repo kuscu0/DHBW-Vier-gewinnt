@@ -11,8 +11,7 @@ public class Bot
 		width = widthOfField;
 	}
 	
-	public void nextRound(int lastColumn, int lastRow)
-	{
+	public void nextRound(int lastColumn, int lastRow) {
 		boolean threeInARow = c.checkInARow(lastColumn, lastRow, 1, 3);
 		
 		int column = (int)(Math.random() * width);
@@ -23,7 +22,8 @@ public class Bot
 			if (columnPlayerWin >= 0) column = columnPlayerWin;
 		}
 		
-		c.setChip(column);
+		c.setChip(column, 2);
+		System.out.println("BOT setzt auf " + column);
 	}
 	
 	
@@ -49,7 +49,7 @@ public class Bot
 		{
 			for (int i = field.length - 1; i >= 0; i--)
 			{
-				if (field[x + 1][i] == 0)
+				if (field[x][i] == 0)
 				{
 					columnToTheLeft = c.checkInARow(x - 1, i, 1, 4); 
 					break;
