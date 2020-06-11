@@ -5,6 +5,7 @@ html, body {
 
 body {
     background-color: #191919;
+    overflow: hidden;
 }
 
 h1 {
@@ -104,4 +105,15 @@ h1 {
 
 .menu .button .usericon {
     width: 10%;
+}
+
+.arrow-down {
+  width: 0; 
+  height: 0; 
+  border-left: 20px solid blue;
+  border-right: 20px solid blue;
+  
+  border-top: 20px solid #0f0;
+  text-decoration: none;
+  cursor: pointer;
 }
