@@ -11,13 +11,16 @@ public class Bot
 		width = widthOfField;
 	}
 	
-	public void nextRound(int lastColumn, int lastRow) {
+	public void nextRound(int lastColumn, int lastRow) 
+	{
+//		System.out.println("Bot Next Round, last PlayerPosition x = " + lastColumn + " y=" + lastRow);
 		boolean threeInARow = c.checkInARow(lastColumn, lastRow, 1, 3);
 		
 		int column = (int)(Math.random() * width);
 		
 		if (threeInARow)
 		{
+//			System.out.println("Three in a Row");
 			int columnPlayerWin = getColumnWhichPlayerWins(lastColumn, lastRow);
 			if (columnPlayerWin >= 0) column = columnPlayerWin;
 		}
@@ -30,37 +33,53 @@ public class Bot
 	private int getColumnWhichPlayerWins(int x, int y)
 	{
 		int[][] field = c.getField();
+		int height = field.length;
+		int chip = 1;
+		int offset = 1;
 		
 		boolean columnToTheLeft = false;	
 		if (x - 1 >= 0)
 		{
-			for (int i = field.length - 1; i >= 0; i--)
+			for (int i = height - 1; i >= 0; i--)
 			{
-				if (field[x - 1][i] == 0)
+				if (i == 0)
 				{
-					columnToTheLeft = c.checkInARow(x - 1, i, 1, 4); 
+					columnToTheLeft = c.checkInARowWithOffset(x - 1, i, chip, 4, offset);
 					break;
 				}
 			}
 		}			
-		boolean thisColumn = (y - 1 >= 0) ? c.checkInARow(x, y - 1, 1, 4) : false;
+		boolean thisColumn = (y - 1 >= 0) ? c.checkInARowWithOffset(x, y - 1, chip, 4, offset) : false;
 		boolean columnToTheRight = false;
 		if (x + 1 < width)
 		{
-			for (int i = field.length - 1; i >= 0; i--)
+			for (int i = height - 1; i >= 0; i--)
 			{
-				if (field[x][i] == 0)
+				if (field[i][x + 1] == 0)
 				{
-					columnToTheLeft = c.checkInARow(x - 1, i, 1, 4); 
+					columnToTheRight = c.checkInARowWithOffset(x + 1, i, chip, 4, offset); 
 					break;
 				}
 			}
 		}
 		
-		if (columnToTheLeft) return x - 1;
-		if (thisColumn) return x;
-		if (columnToTheRight) return x + 1;
+		if (columnToTheLeft) 
+		{
+//			System.out.println("Left: " + (x - 1));
+			return x - 1;
+		}
+		if (thisColumn) 
+		{
+//			System.out.println("This: " + (x));
+			return x;
+		}
+		if (columnToTheRight) 
+		{
+//			System.out.println("Right: " + (x + 1));
+			return x + 1;
+		}
 		
+//		System.out.println("Nothing");
 		return -1;
 	}
 }

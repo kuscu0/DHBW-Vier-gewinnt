@@ -108,17 +108,26 @@ public class Control
 	
 	public boolean checkInARow(int x, int y, int chip, int length)
 	{
-		boolean vertical = checkVertical(x, y, chip, length);
-		boolean horizontal = checkHorizontal(x, y, chip, length);
-		boolean sidewaysRight = checkSidewaysRight(x, y, chip, length);
-		boolean sidewaysLeft = checkSidewaysLeft(x, y, chip, length);	
+		return checkInARowWithOffset(x, y, chip, length, 0);
+	}
+	
+	
+	public boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset)
+	{
+		if (!(0 <= y && y < HEIGHT) || !(0 <= x && x < WIDTH)) return false;
+		
+		boolean vertical = checkVertical(x, y, chip, length, offset);
+		boolean horizontal = checkHorizontal(x, y, chip, length, offset);
+		boolean sidewaysRight = checkSidewaysRight(x, y, chip, length, offset);
+		boolean sidewaysLeft = checkSidewaysLeft(x, y, chip, length, offset);	
+		
 		return horizontal || vertical || sidewaysLeft || sidewaysRight;
 	}
 	
 	
-	private boolean checkHorizontal(int x, int y, int chip, int length)
+	private boolean checkHorizontal(int x, int y, int chip, int length, int offset)
 	{
-		int line = 0;
+		int line = offset;
 		for (int i = -1 * (length - 1); i < length; i++)
 		{
 			int xi = x + i;
@@ -126,15 +135,15 @@ public class Control
 			{
 				if (field[y][xi] == chip) line++;
 				else if (line >= length) break;
-				else line = 0;
+				else line = offset;
 			}
 		}
 		return line >= length;
 	}
 	
-	private boolean checkVertical(int x, int y, int chip, int length)
+	private boolean checkVertical(int x, int y, int chip, int length, int offset)
 	{
-		int line = 0;
+		int line = offset;
 		if (y <= HEIGHT - length)
 		{
 			for (int i = 0; i < length; i++)
@@ -146,9 +155,9 @@ public class Control
 	}
 	
 	//Right Up
-	private boolean checkSidewaysRight(int x, int y, int chip, int length)
+	private boolean checkSidewaysRight(int x, int y, int chip, int length, int offset)
 	{
-		int line = 0;
+		int line = offset;
 		for (int i = -1 * (length - 1); i < length; i++)
 		{
 			int xi = x - i;
@@ -157,16 +166,16 @@ public class Control
 			{
 				if (field[yi][xi] == chip) line++;
 				else if (line >= length) break;
-				else line = 0;
+				else line = offset;
 			}
 		}
 		return line >= length;
 	}
 	
 	//Left Up
-	private boolean checkSidewaysLeft(int x, int y, int chip, int length)
+	private boolean checkSidewaysLeft(int x, int y, int chip, int length, int offset)
 	{
-		int line = 0;
+		int line = offset;
 		for (int i = -1 * (length - 1); i < length; i++)
 		{
 			int xi = x + i;
@@ -175,7 +184,7 @@ public class Control
 			{
 				if (field[yi][xi] == chip) line++;
 				else if (line >= length) break;
-				else line = 0;
+				else line = offset;
 			}
 		}
 		return line >= length;
