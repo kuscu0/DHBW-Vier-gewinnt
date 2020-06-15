@@ -20,7 +20,7 @@ public class Main {
             System.out.println();
             if (yourTurn) {
                 String befehl = sc.nextLine();
-                c.setChip(Integer.valueOf(befehl), 1);
+                c.setChip(Integer.valueOf(befehl));
             }
             yourTurn = !yourTurn;
 

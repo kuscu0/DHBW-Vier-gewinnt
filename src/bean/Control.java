@@ -1,5 +1,7 @@
 package bean;
 
+import bean.Control;
+
 public class Control
 {
 	private static final int WIDTH = 7;
@@ -17,7 +19,7 @@ public class Control
 	
 	public void newRound(boolean playAgainstBot)
 	{
-		fillField(0);
+		clearField();
 		if (playAgainstBot) bot = new Bot(this, WIDTH);
 			
 		activePlayer = 1;
@@ -25,7 +27,7 @@ public class Control
 		playerWon = 0;
 	}
 	
-	public void botRound() {
+	private void botRound() {
 		if (bot != null) {
 			bot.nextRound(lastColumn, lastRow);
 		}
@@ -40,7 +42,7 @@ public class Control
 		}
 	}
 
-	public boolean setChip(int column, int activePlayer)
+	public boolean setChip(int column)
 	{	
 		round++;
 		
@@ -84,13 +86,13 @@ public class Control
 		return sb.toString();
 	}
 	
-	private void fillField(int i)
+	private void clearField()
 	{
 		for(int y = 0; y < HEIGHT; y++)
 		{
 			for (int x = 0; x < WIDTH; x++)
 			{
-				field[y][x] = i;
+				field[y][x] = 0;
 			}
 		}
 	}
@@ -106,13 +108,13 @@ public class Control
 	}
 	
 	
-	public boolean checkInARow(int x, int y, int chip, int length)
+	private boolean checkInARow(int x, int y, int chip, int length)
 	{
 		return checkInARowWithOffset(x, y, chip, length, 0);
 	}
 	
 	
-	public boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset)
+	private boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset)
 	{
 		if (!(0 <= y && y < HEIGHT) || !(0 <= x && x < WIDTH)) return false;
 		
@@ -188,5 +190,93 @@ public class Control
 			}
 		}
 		return line >= length;
+	}
+
+	//
+	//The Bot
+	//
+	public class Bot 
+	{
+		private Control c;
+		private int width;
+		
+		public Bot(Control control, int widthOfField)
+		{
+			c = control;
+			width = widthOfField;
+		}
+		
+		public void nextRound(int lastColumn, int lastRow) 
+		{	
+			boolean threeInARow = c.checkInARow(lastColumn, lastRow, 1, 3);
+			
+			int column = (int)(Math.random() * width);
+			
+			if (threeInARow)
+			{
+//				System.out.println("Three in a Row");
+				int columnPlayerWin = getColumnWhichPlayerWins(lastColumn, lastRow);
+				if (columnPlayerWin >= 0) column = columnPlayerWin;
+			}
+			
+			c.setChip(column);
+			System.out.println("BOT setzt auf " + column);
+			
+			c.nextRound();
+		}
+		
+		
+		private int getColumnWhichPlayerWins(int x, int y)
+		{
+			int[][] field = c.getField();
+			int height = field.length;
+			int chip = 1;
+			int offset = 1;
+			
+			boolean columnToTheLeft = false;	
+			if (x - 1 >= 0)
+			{
+				for (int i = height - 1; i >= 0; i--)
+				{
+					if (i == 0)
+					{
+						columnToTheLeft = c.checkInARowWithOffset(x - 1, i, chip, 4, offset);
+						break;
+					}
+				}
+			}			
+			boolean thisColumn = (y - 1 >= 0) ? c.checkInARowWithOffset(x, y - 1, chip, 4, offset) : false;
+			boolean columnToTheRight = false;
+			if (x + 1 < width)
+			{
+				for (int i = height - 1; i >= 0; i--)
+				{
+					if (field[i][x + 1] == 0)
+					{
+						columnToTheRight = c.checkInARowWithOffset(x + 1, i, chip, 4, offset); 
+						break;
+					}
+				}
+			}
+			
+			if (columnToTheLeft) 
+			{
+//				System.out.println("Left: " + (x - 1));
+				return x - 1;
+			}
+			if (thisColumn) 
+			{
+//				System.out.println("This: " + (x));
+				return x;
+			}
+			if (columnToTheRight) 
+			{
+//				System.out.println("Right: " + (x + 1));
+				return x + 1;
+			}
+			
+//			System.out.println("Nothing");
+			return -1;
+		}
 	}
 }
