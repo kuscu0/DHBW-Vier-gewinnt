@@ -27,17 +27,23 @@ public class Control
 		playerWon = 0;
 	}
 	
-	private void botRound() {
-		if (bot != null) {
+	private void botRound() 
+	{
+		if (bot != null) 
+		{
 			bot.nextRound(lastColumn, lastRow);
 		}
 	}
 	
-	public void nextRound() {
-		if (activePlayer == 1) {
+	public void nextRound() 
+	{
+		if (activePlayer == 1)
+		{
 			activePlayer = 2;
 			botRound();
-		} else {
+		} 
+		else 
+		{
 			activePlayer = 1;
 		}
 	}
@@ -57,7 +63,7 @@ public class Control
 					field[row][column] = chipColor;
 					lastColumn = column;
 					lastRow = row;
-					return checkGewonnen(column, row, chipColor);
+					return true;
 				}
 			}
 		}
@@ -95,6 +101,13 @@ public class Control
 				field[y][x] = 0;
 			}
 		}
+	}
+	
+	
+	public boolean checkGewonnen()
+	{
+		int chipOfLastPosition = field[lastRow][lastColumn];
+		return checkGewonnen(lastColumn, lastRow, chipOfLastPosition);
 	}
 	
 	
@@ -220,9 +233,7 @@ public class Control
 			}
 			
 			c.setChip(column);
-
-			// System.out.println("BOT setzt auf " + column);
-
+			System.out.println("BOT setzt auf " + column);
 			
 			c.nextRound();
 		}
