@@ -12,11 +12,11 @@
 
 <div class="menu">
 	<form action="play" method="post">
-		<button class="button compBtn" id="playBtn">Spieler gegen Computer</button>
-		<button class="button twoPlayersBtn" id="2playersBtn">2 Spieler</button>
-		<button class="button onlineBtn" id="onlineBtn">Online-Match</button>
-		<button class="button settingsBtn" id="settingsBtn">Einstellungen</button>
-		<button class="button aboutBtn" id="aboutBtn">Über...</button>
+		<button class="button compBtn" name="playBtn">Spieler gegen Computer</button>
+		<button class="button twoPlayersBtn" name="2playersBtn">2 Spieler</button>
+		<button class="button onlineBtn" name="onlineBtn">Online-Match</button>
+		<button class="button settingsBtn" name="settingsBtn">Einstellungen</button>
+		<button class="button aboutBtn" name="aboutBtn">Über...</button>
 	</form>
 </div>
 
