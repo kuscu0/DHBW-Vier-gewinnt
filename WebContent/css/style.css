@@ -27,7 +27,7 @@ h1 {
     float: left;
 }
 
-.menu .button {
+.button {
     background-color: DodgerBlue; /* Green */
     border: none;
     color: white;
@@ -45,13 +45,13 @@ h1 {
     border-radius: 10px;
 }
 
-.menu .button:before {
+.button:before {
     width: 7.5%;
     float: left;
     margin-left: 2.5%;
 }
 
-.menu .button:after {
+.button:after {
     width: 7.5%;
     float: right;
     margin-right: 2.5%;
@@ -116,4 +116,22 @@ h1 {
   border-top: 20px solid #0f0;
   text-decoration: none;
   cursor: pointer;
+}
+
+.backBtn {
+	background-color: DodgerBlue; /* Green */
+    border: none;
+    color: white;
+    width: 25%;
+    height: 10%;
+    margin-left: 10%;
+    margin-top: 2%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.85vw;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    cursor: pointer;
+    float: left;
+    border-radius: 10px;
 }

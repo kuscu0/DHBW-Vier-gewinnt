@@ -1,5 +1,7 @@
 package bean;
 
+import org.apache.tomcat.jni.Time;
+
 import bean.Control;
 
 public class Control
@@ -233,7 +235,6 @@ public class Control
 			}
 			
 			c.setChip(column);
-			System.out.println("BOT setzt auf " + column);
 			
 			c.nextRound();
 		}
