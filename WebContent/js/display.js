@@ -31,6 +31,7 @@ function createTable(tablaData, parentNode) {
             tField = document.createElement("td")
             img = document.createElement("img")
             img.setAttribute("src", getSource(tablaData[i][j]))
+            img.setAttribute("style", "margin: 10px;");
             tField.appendChild(img);
             tRow.appendChild(tField);
         }
@@ -39,8 +40,8 @@ function createTable(tablaData, parentNode) {
 
 
     parentNode.appendChild(table);
-    parentNode.setAttribute("style", "margin: 0; margin-left: 37.5%; margin-top: 10%; width: 25%;");
-    table.setAttribute("style", "margin: 0;" +
+    parentNode.setAttribute("style", "margin-top: 10%; margin-left: auto; margin-right: auto; display: block;");
+    table.setAttribute("style", "margin: 0 auto;" +
     							"background-color: #0000FF;" +
 								"border-radius: 20px;");
 }

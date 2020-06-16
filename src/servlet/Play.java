@@ -70,7 +70,7 @@ public class Play extends HttpServlet {
         	}
         }
         
-        out.println(		"<button class=\"button\" onclick=\"location.href = 'index.jsp';\">Zurück zum Hauptmenü</button>" +
+        out.println(		"<button class=\"backBtn\" onclick=\"location.href = 'index.jsp';\">Zur Startseite</button>" +
         				"</body>" +
         			"</html>");
         

@@ -1,7 +1,5 @@
 package bean;
 
-import org.apache.tomcat.jni.Time;
-
 import bean.Control;
 
 public class Control
@@ -34,7 +32,7 @@ public class Control
 		if (activePlayer == 1)
 		{
 			activePlayer = 2;
-			if (bot != null && playerWon == 0) 
+			if (bot != null && checkGewonnen() == false) 
 			{
 				bot.nextRound(lastColumn, lastRow);
 			}
@@ -73,7 +71,7 @@ public class Control
 	{
 		return field;
 	}
-
+	
 	
 	public int getPlayerWon()
 	{
