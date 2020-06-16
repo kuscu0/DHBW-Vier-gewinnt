@@ -27,20 +27,15 @@ public class Control
 		playerWon = 0;
 	}
 	
-	private void botRound() 
-	{
-		if (bot != null) 
-		{
-			bot.nextRound(lastColumn, lastRow);
-		}
-	}
-	
 	public void nextRound() 
 	{
 		if (activePlayer == 1)
 		{
 			activePlayer = 2;
-			botRound();
+			if (bot != null && playerWon == 0) 
+			{
+				bot.nextRound(lastColumn, lastRow);
+			}
 		} 
 		else 
 		{
@@ -76,6 +71,7 @@ public class Control
 	{
 		return field;
 	}
+
 	
 	public int getPlayerWon()
 	{
