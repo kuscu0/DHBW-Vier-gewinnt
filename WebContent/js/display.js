@@ -40,7 +40,12 @@ function createTable(tablaData, parentNode) {
 
 
     parentNode.appendChild(table);
-    parentNode.setAttribute("style", "margin-top: 10%; margin-left: auto; margin-right: auto; display: block;");
+    parentNode.setAttribute("style", "position: fixed;" +
+    								 "margin-top: 10%; " +
+    								 "left: 50%; " +
+    								 "margin-left: -15%; " +
+    								 "display: block;");
+    
     table.setAttribute("style", "margin: 0 auto;" +
     							"background-color: #0000FF;" +
 								"border-radius: 20px;");
@@ -54,7 +59,8 @@ function removeButton(id) {
 function removeButtons() {
     for (i = 0; i < 7; i++) {
         var btn = document.getElementById("btn_spalte_" + i);
-        btn.remove();
+        btn.setAttribute("style", "border-top: 20px solid gray; cursor: not-allowed;");
+        btn.disabled = true;
     }
 }
 

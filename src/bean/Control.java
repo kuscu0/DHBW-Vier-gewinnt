@@ -1,5 +1,7 @@
 package bean;
 
+import javax.servlet.http.HttpSession;
+
 import bean.Control;
 
 public class Control
@@ -17,6 +19,7 @@ public class Control
 	private Bot bot;
 	
 	
+
 	public void newRound(boolean playAgainstBot)
 	{
 		clearField();
@@ -199,6 +202,24 @@ public class Control
 			}
 		}
 		return line >= length;
+	}
+	
+	public void setRefresh(HttpSession session) {
+		session.setAttribute("field", field);
+		session.setAttribute("activePlayer", activePlayer);
+		session.setAttribute("round", round);
+		session.setAttribute("playerWon", playerWon);
+		session.setAttribute("lastColumn", lastColumn);
+		session.setAttribute("lastRow", lastRow);
+	}
+	
+	public void getRefresh(HttpSession session) {
+		field = (int[][]) session.getAttribute("field");
+		activePlayer = (int) session.getAttribute("activePlayer");
+		round = (int) session.getAttribute("round");
+		playerWon = (int) session.getAttribute("playerWon");
+		lastColumn = (int) session.getAttribute("lastColumn");
+		lastRow = (int) session.getAttribute("lastRow");
 	}
 
 	//

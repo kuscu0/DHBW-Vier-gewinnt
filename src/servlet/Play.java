@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import bean.Control;
 
 
@@ -14,13 +16,14 @@ public class Play extends HttpServlet {
 	private static final long serialVersionUID = 2893048395274292624L;
 	
 	
-	Control c = new Control();
+	Control c;
     boolean yourTurn = true;
     
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
         PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession();
 
         out.println("<!DOCTYPE html>" +
 		            "<html>" +
@@ -39,16 +42,19 @@ public class Play extends HttpServlet {
 
         
         if(request.getParameter("insertbtn") != null) {
-        	
+        		c.getRefresh(session);
                 c.setChip(Integer.parseInt(request.getParameter("insertbtn")));
                 c.nextRound();
+                c.setRefresh(session);
 
         } else {
         	c = new Control();
         	if(request.getParameter("playBtn") != null) {
         		c.newRound(true);
+        		c.setRefresh(session);
         	} else if(request.getParameter("2playersBtn") != null) {
         		c.newRound(false);
+        		c.setRefresh(session);
         	}
         	yourTurn = true;
     	}
@@ -58,15 +64,16 @@ public class Play extends HttpServlet {
         
         if(c.checkGewonnen()) {
         	
+        	
+        	
         	if(c.getPlayerWon() == 1){
-        		
         		out.println("<script>removeButtons();</script>" +
-        					"<h1>Du hast das Spiel gewonnen!</h1>");
+        					"<h1 class=\"statusText\">Du hast das Spiel gewonnen!</h1>");
         		
         	} else if(c.getPlayerWon() == 2) {
         		
         		out.println("<script>removeButtons();</script>" +
-        					"<h1>Du hast verloren :(</h1>");
+        					"<h1 class=\"statusText\">Du hast verloren :(</h1>");
         	}
         }
         
