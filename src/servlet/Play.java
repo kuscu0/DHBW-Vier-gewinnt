@@ -43,14 +43,14 @@ public class Play extends HttpServlet {
         if(request.getParameter("insertbtn") != null) {
         	if (c.getPlayerWon() == 0) {
         		
-                c.setChip(Integer.parseInt(request.getParameter("insertbtn")), 1);
+                c.setChip(Integer.parseInt(request.getParameter("insertbtn")));
                 System.out.println("SPIELER setzt auf " + Integer.parseInt(request.getParameter("insertbtn")));
             	
-                c.botRound();
+                c.nextRound();
                 
         	}
         } else {
-        	c.newRound(true);
+        	c.newRound(false);
     	}
 
         out.println(			"var gameTable = " + Arrays.deepToString(c.getField()) + ";" +
