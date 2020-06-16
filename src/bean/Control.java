@@ -220,7 +220,9 @@ public class Control
 			}
 			
 			c.setChip(column);
+
 			// System.out.println("BOT setzt auf " + column);
+
 			
 			c.nextRound();
 		}

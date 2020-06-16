@@ -68,6 +68,7 @@ public class Play extends HttpServlet {
         if(c.getPlayerWon() == 1){
     		out.println("<script>removeButtons();</script>" +
     					"<h1>Du hast das Spiel gewonnen!</h1>" +
+    					"" + 
     				"</body>" +
         		"</html>");
     		
@@ -78,7 +79,7 @@ public class Play extends HttpServlet {
     	    
     	} else if(c.getPlayerWon() == 2) {
     		out.println("<script>removeButtons();</script>" +
-    					"<h1>Der Bot hat das Spiel gewonnen :(</h1>" +
+    					"<h1>Du hast verloren :(</h1>" +
     				"</body>" +
     			"</html>");
     		
