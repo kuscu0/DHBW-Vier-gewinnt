@@ -3,6 +3,8 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,11 +21,19 @@ public class Play extends HttpServlet {
 	Control c;
     boolean yourTurn = true;
     
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {	
+    	doPost(request, response, null);
+    }
+    
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
+    protected void doPost(HttpServletRequest request, HttpServletResponse response, String sessionID) throws ServletException, IOException
+    {	
         PrintWriter out = response.getWriter();
-        HttpSession session = request.getSession();
+        HttpSession session = getSession(request, sessionID);
+        
+        System.out.println(session.getId());
 
         out.println("<!DOCTYPE html>" +
 		            "<html>" +
@@ -41,13 +51,15 @@ public class Play extends HttpServlet {
 
 
         
-        if(request.getParameter("insertbtn") != null) {
-        		c.getRefresh(session);
-                c.setChip(Integer.parseInt(request.getParameter("insertbtn")));
-                c.nextRound();
-                c.setRefresh(session);
-
-        } else {
+        if(request.getParameter("insertbtn") != null) 
+        {
+    		c.getRefresh(session);
+            c.setChip(Integer.parseInt(request.getParameter("insertbtn")));
+            c.nextRound();
+            c.setRefresh(session);
+        } 
+        else 
+        {
         	c = new Control();
         	if(request.getParameter("playBtn") != null) {
         		c.newRound(true);
@@ -85,4 +97,14 @@ public class Play extends HttpServlet {
         out.close();
     }
 
+    private HttpSession getSession(HttpServletRequest request, String sessionID)
+    {
+    	HttpSession session = request.getSession();
+        if (sessionID != null)
+        {
+        	ServletContext srvContext = getServletContext();
+        	session = (HttpSession) srvContext.getAttribute(sessionID);
+        }
+        return session;
+    }
 }
