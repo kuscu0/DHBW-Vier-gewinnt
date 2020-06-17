@@ -249,9 +249,8 @@ public class Control
 				if (columnPlayerWin >= 0) column = columnPlayerWin;
 			}
 			
-			c.setChip(column);
-			
-			c.nextRound();
+			if (!c.setChip(column)) nextRound(lastColumn, lastRow);
+			else c.nextRound();
 		}
 		
 		
