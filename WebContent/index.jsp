@@ -11,12 +11,11 @@
 <h1>Vier gewinnt</h1>
 
 <div class="menu">
-	<form action="play" method="post">
-		<button class="button compBtn" name="playBtn">Spieler gegen Computer</button>
-		<button class="button twoPlayersBtn" name="2playersBtn">2 Spieler</button>
-		<button class="button onlineBtn" name="onlineBtn">Online-Match</button>
-		<button class="button settingsBtn" name="settingsBtn">Einstellungen</button>
-		<button class="button aboutBtn" name="aboutBtn">Über...</button>
+	<form action="play" method="post" style="display: flex; justify-content: space-evenly;">
+		<button class="button compBtn" name="playBtn">vs.</button>
+		<button class="button twoPlayersBtn" name="2playersBtn">vs.</button>
+		<button class="button onlineBtn" name="onlineBtn">vs.</button>
+		<button class="button helpBtn" name="helpBtn">?</button>
 	</form>
 </div>
 

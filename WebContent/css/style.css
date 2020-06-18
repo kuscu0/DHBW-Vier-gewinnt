@@ -12,49 +12,47 @@ body {
 h1 {
     color: white;
    	text-align: center;
-   	margin-top: 5%;
+   	margin-top: 10%;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 2vw;
 }
 
 .menu {
-    background-color: #e6e6e6;
-    width: 20%;
-    height: 50%;
-    border-radius: 15px;
-    margin-left: 40%;
-    margin-top: 5%;
-    float: left;
+	width: calc((100%/3)*2);
+	margin: 0 auto;
+	margin-top: 10%;
 }
 
 .button {
     background-color: DodgerBlue; /* Green */
     border: none;
     color: white;
-    width: 80%;
-    height: 10%;
-    margin-left: 10%;
-    margin-top: 10%;
+    width: 20%;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
-    font-size: 0.85vw;
+    font-size: 3vw;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: bold;
     cursor: pointer;
-    float: left;
-    border-radius: 10px;
+   	display: inline-block;
+    border-radius: 20px;
+    margin: -2%;
 }
 
 .button:before {
-    width: 7.5%;
+    width: 25%;
     float: left;
-    margin-left: 2.5%;
+    margin-top: 10%;
+    margin-left: 2%;
+    margin-bottom: 10%;
 }
 
 .button:after {
-    width: 7.5%;
+    width: 25%;
     float: right;
-    margin-right: 2.5%;
+    margin-top: 10%;
+    margin-right: 2%;
+    margin-bottom: 10%;
 }
 
 .compBtn:before {
@@ -62,7 +60,7 @@ h1 {
 }
 .compBtn:after {
     content: url("../res/robot.svg");
-    width: 10% !important;
+	width: 30% !important;
 }
 .twoPlayersBtn:before {
     content: url("../res/user.svg");
@@ -75,14 +73,6 @@ h1 {
 }
 .onlineBtn:after {
     content: url("../res/globe.svg");
-}
-.settingsBtn:before {
-    content: url("../res/cogs.svg");
-    width: 10% !important;
-}
-.aboutBtn:before {
-    content: url("../res/info.svg");
-    width: 3.5% !important;
 }
 
 .insertChipBtn {
