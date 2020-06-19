@@ -44,10 +44,6 @@ public class Play extends HttpServlet
         	insertCoin(session, request);
         	printHtmlDoc(response, "insertBtn", sessionID);
         }
-        else if(request.getParameter("playBtn") != null) 
-        {
-        	
-        }
         if(request.getParameter("playBtn") != null)
         {
         	c = new Control();
@@ -66,15 +62,12 @@ public class Play extends HttpServlet
     		createOnlineMatch(session);
     		printHtmlDoc(response, "onlineBtn", sessionID);
         } 
-        else if(request.getParameter("newOnlineGameBtn") != null) 
-        {
-        	
-        }
         else if(request.getParameter("helpBtn") != null)
         {
         	printHtmlDoc(response, "helpBtn", sessionID);
         } 
-        else if(request.getParameter("newOnlineGameBtn") != null) {
+        else if(request.getParameter("newOnlineGameBtn") != null) 
+        {
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlDoc(response, "newOnlineGameBtn", sessionID);
@@ -84,7 +77,8 @@ public class Play extends HttpServlet
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlDoc(response, "existingGameBtn", sessionID);
-        } else if(request.getParameter("insertBtn") != null) { 
+        } else if(request.getParameter("insertBtn") != null) 
+        { 
         	insertCoin(session, request);
         	printHtmlDoc(response, "insertBtn", sessionID);
         }
