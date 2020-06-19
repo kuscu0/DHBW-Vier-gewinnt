@@ -11,12 +11,12 @@
 </head>
 <body>
 	<p style="color: white;">
-		Deniz Kuscu, Yegor Reichert, Pascal Pascalson, Jakob Jakobson <br>
+		Deniz Kuscu, Yegor Reichert, Pascal Simon, Jakob Jakobson, Fabian Fabianson<br>
 		Duale Hochschule Baden-Württemberg Karlsruhe <br>
 		Erzbergerstraße 121<br>
 		76133 Karlsruhe
 	</p>
 	<br>
-	<a href="index.jsp">Zurück zur Startseite</a>
+	<a href="index.jsp" style="color: #3391ff;">Zurück zur Startseite</a>
 </body>
 </html>
