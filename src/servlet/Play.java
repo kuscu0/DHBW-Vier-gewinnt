@@ -38,12 +38,7 @@ public class Play extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response, String sessionID) throws ServletException, IOException
     {	
         HttpSession session = getSession(request, sessionID);
-        
-        if(request.getParameter("insertBtn") != null)
-        { 
-        	insertCoin(session, request);
-        	printHtmlDoc(response, "insertBtn", sessionID);
-        }
+
         if(request.getParameter("playBtn") != null)
         {
         	c = new Control();
