@@ -25,7 +25,7 @@ public class Constants
 	public static final String VAR_GAME_TABLE = "var gameTable = ";
 	
 	public static final String REMOVE_BUTTON = "<script>removeButtons();</script>";
-	public static final String BACK_BUTTON = "<button class=\"backBtn\" onclick=\"location.href = 'index.jsp';\">Zur Startseite</button>";
+	public static final String BACK_BUTTON = "<button class=\"backBtn\" onclick=\"location.href = 'index.jsp';\">Zum Hauptmenü</button>";
 	
 	public static final String H1_STATUS_TEXT = "<h1 class=\"statusText\">";
 	public static final String H1_END = "</h1>";
