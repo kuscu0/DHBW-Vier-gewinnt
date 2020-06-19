@@ -18,7 +18,7 @@
 			<button class="button onlineBtn" name="onlineBtn">vs.</button>
 			<button class="button helpBtn" name="helpBtn">?</button>
 			<span class="hiddenText1">Spieler gegen Computer</span>
-			<span class="hiddenText2">Spieler gegen Spieler</span>
+			<span class="hiddenText2">2 Spieler</span>
 			<span class="hiddenText3">Online-Match</span>
 			<span class="hiddenText4">Hilfe</span>
 		</form>
