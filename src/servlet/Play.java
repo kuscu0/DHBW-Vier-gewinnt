@@ -39,27 +39,37 @@ public class Play extends HttpServlet
     {	
         HttpSession session = getSession(request, sessionID);
         
-        
-        if(request.getParameter("insertBtn") != null) { 
+        if(request.getParameter("insertBtn") != null)
+        { 
         	insertCoin(session, request);
         	printHtmlDoc(response, "insertBtn", sessionID);
-        } else if(request.getParameter("playBtn") != null) {
+        }
+        else if(request.getParameter("playBtn") != null) 
+        {
         	c = new Control();
     		createBotMatch(session);
     		printHtmlDoc(response, "playBtn", sessionID);
-        } else if(request.getParameter("2playersBtn") != null) {
+        } 
+        else if(request.getParameter("2playersBtn") != null) 
+        {
         	c = new Control();
 			createLocalMatch(session);
 			printHtmlDoc(response, "2playersBtn", sessionID);
-    	} else if(request.getParameter("onlineBtn") != null) {
+    	} 
+        else if(request.getParameter("onlineBtn") != null) 
+    	{
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlDoc(response, "onlineBtn", sessionID);
-        } else if(request.getParameter("newOnlineGameBtn") != null) {
+        } 
+        else if(request.getParameter("newOnlineGameBtn") != null) 
+        {
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlDoc(response, "newOnlineGameBtn", sessionID);
-        } else if(request.getParameter("existingGameBtn") != null) {
+        }
+        else if(request.getParameter("existingGameBtn") != null) 
+        {
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlDoc(response, "existingGameBtn", sessionID);
@@ -90,9 +100,8 @@ public class Play extends HttpServlet
      */
     private void createLocalMatch(HttpSession session)
     {
-		c.newRound(false);
+		c.newRound(RoundType.LOCAL);
 		c.setRefresh(session);
-    	roundType = RoundType.LOCAL;
     }
     
     /**
@@ -101,9 +110,8 @@ public class Play extends HttpServlet
      */
     private void createBotMatch(HttpSession session)
     {
-		c.newRound(true);
+		c.newRound(RoundType.BOT);
 		c.setRefresh(session);
-    	roundType = RoundType.BOT;
     }
     
     /**
@@ -112,9 +120,8 @@ public class Play extends HttpServlet
      */
     private void createOnlineMatch(HttpSession session)
     {
-    	c.newRound(false);
+    	c.newRound(RoundType.ONLINE);
     	c.setRefresh(session);
-    	roundType = RoundType.ONLINE;
     }
     
     /**
@@ -145,6 +152,7 @@ public class Play extends HttpServlet
     private void printHtmlDoc(HttpServletResponse response, String buttonName, String sessionID) throws IOException
     {
         PrintWriter out = response.getWriter();
+        System.out.println(buttonName);
         
         if(buttonName.equals("insertBtn") || buttonName.equals("playBtn") || buttonName.equals("2playersBtn")) {
         	out.println(Constants.HTML_START + Constants.BODY_START);

@@ -5,11 +5,8 @@ import java.io.Serializable;
 import javax.servlet.http.HttpSession;
 
 import bean.Control;
+import servlet.RoundType;
 
-/**
- * @author pascalsimon
- *
- */
 /**
  * @author pascalsimon
  *
@@ -21,7 +18,7 @@ public class Control implements Serializable
 	private static final int HEIGHT = 6;
 		
 	private int[][] field = new int[HEIGHT][WIDTH];
-	
+    private RoundType roundType;
 	private int activePlayer = 1;
 	private int round = 0;
 	private int playerWon = 0;
@@ -34,13 +31,15 @@ public class Control implements Serializable
 	/**
 	 * This function needs to be called when starting an round
 	 * 
-	 * @param playAgainstBot If a Bot is enabled as Second Player
+	 * @param roundType The type of the match.
 	 */
-	public void newRound(boolean playAgainstBot)
+	public void newRound(RoundType roundType)
 	{
+		this.roundType = roundType;
+		
 		clearField();
-		if (playAgainstBot) bot = new Bot(this, WIDTH);
-			
+		if (roundType == RoundType.BOT) bot = new Bot(this, WIDTH);
+		
 		activePlayer = 1;
 		round = 0;
 		playerWon = 0;
@@ -54,10 +53,8 @@ public class Control implements Serializable
 		if (activePlayer == 1)
 		{
 			activePlayer = 2;
-			if (bot != null && checkGewonnen() == false) 
-			{
-				bot.nextRound(lastColumn, lastRow);
-			}
+
+			if (bot != null && playerWon == 0) bot.nextRound(lastColumn, lastRow);
 		} 
 		else 
 		{
@@ -93,6 +90,25 @@ public class Control implements Serializable
 		}
 
 		return false;
+	}
+	
+	
+	
+	/**
+	 * @return The Bot
+	 */
+	public Bot getBot()
+	{
+		return bot;
+	}
+	
+	
+	/**
+	 * @return The RoundType of this match.
+	 */
+	public RoundType getRoundType()
+	{
+		return roundType;
 	}
 	
 	
@@ -190,7 +206,7 @@ public class Control implements Serializable
 	 */
 	private boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset)
 	{
-		if (!(0 <= y && y < HEIGHT) || !(0 <= x && x < WIDTH)) return false;
+		if (!((0 <= y && y < HEIGHT) && (0 <= x && x < WIDTH))) return false;
 		
 		boolean vertical = checkVertical(x, y, chip, length, offset);
 		boolean horizontal = checkHorizontal(x, y, chip, length, offset);
@@ -303,13 +319,15 @@ public class Control implements Serializable
 	 * 
 	 * @param session The Session which should be refreshed.
 	 */
-	public void setRefresh(HttpSession session) {
-		session.setAttribute("field", field);
-		session.setAttribute("activePlayer", activePlayer);
-		session.setAttribute("round", round);
-		session.setAttribute("playerWon", playerWon);
-		session.setAttribute("lastColumn", lastColumn);
-		session.setAttribute("lastRow", lastRow);
+	public void setRefresh(HttpSession session) 
+	{
+		session.setAttribute(Constants.ATTRIBUTE_FIELD, field);
+		session.setAttribute(Constants.ATTRIBUTE_ACTIVE_PLAYER, activePlayer);
+		session.setAttribute(Constants.ATTRIBUTE_ROUND, round);
+		session.setAttribute(Constants.ATTRIBUTE_PLAYER_WON, playerWon);
+		session.setAttribute(Constants.ATTRIBUTE_LAST_COLUMN, lastColumn);
+		session.setAttribute(Constants.ATTRIBUTE_LAST_ROW, lastRow);
+		session.setAttribute(Constants.ATTRIBUTE_ROUND_TYPE, roundType);
 	}
 	
 	
@@ -318,13 +336,15 @@ public class Control implements Serializable
 	 * 
 	 * @param session The session which the Match is played in.
 	 */
-	public void getRefresh(HttpSession session) {
-		field = (int[][]) session.getAttribute("field");
-		activePlayer = (int) session.getAttribute("activePlayer");
-		round = (int) session.getAttribute("round");
-		playerWon = (int) session.getAttribute("playerWon");
-		lastColumn = (int) session.getAttribute("lastColumn");
-		lastRow = (int) session.getAttribute("lastRow");
+	public void getRefresh(HttpSession session) 
+	{
+		field = (int[][]) session.getAttribute(Constants.ATTRIBUTE_FIELD);
+		activePlayer = (int) session.getAttribute(Constants.ATTRIBUTE_ACTIVE_PLAYER);
+		round = (int) session.getAttribute(Constants.ATTRIBUTE_ROUND);
+		playerWon = (int) session.getAttribute(Constants.ATTRIBUTE_PLAYER_WON);
+		lastColumn = (int) session.getAttribute(Constants.ATTRIBUTE_LAST_COLUMN);
+		lastRow = (int) session.getAttribute(Constants.ATTRIBUTE_LAST_ROW);
+		roundType = (RoundType) session.getAttribute(Constants.ATTRIBUTE_ROUND_TYPE);
 	}
 
 	/**
@@ -357,7 +377,6 @@ public class Control implements Serializable
 			
 			if (threeInARow)
 			{
-//				System.out.println("Three in a Row");
 				int columnPlayerWin = getColumnWhichPlayerWins(lastColumn, lastRow);
 				if (columnPlayerWin >= 0) column = columnPlayerWin;
 			}
@@ -409,21 +428,17 @@ public class Control implements Serializable
 			
 			if (columnToTheLeft) 
 			{
-//				System.out.println("Left: " + (x - 1));
 				return x - 1;
 			}
 			if (thisColumn) 
 			{
-//				System.out.println("This: " + (x));
 				return x;
 			}
 			if (columnToTheRight) 
 			{
-//				System.out.println("Right: " + (x + 1));
 				return x + 1;
 			}
 			
-//			System.out.println("Nothing");
 			return -1;
 		}
 	}
