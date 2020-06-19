@@ -16,7 +16,7 @@
 			<button class="button compBtn" name="playBtn">vs.</button>
 			<button class="button twoPlayersBtn" name="2playersBtn">vs.</button>
 			<button class="button onlineBtn" name="onlineBtn">vs.</button>
-			<button class="button helpBtn" name="helpBtn">?</button>
+			<button class="button helpBtn" id="helpBtn" name="helpBtn">?</button>
 			<span class="hiddenText1">Spieler gegen Computer</span>
 			<span class="hiddenText2">2 Spieler</span>
 			<span class="hiddenText3">Online-Match</span>
@@ -25,7 +25,6 @@
 	</div>
 	
 	<a href="impressum.jsp" class="imprint">Impressum</a>
-
 </body>
 </html>
 <!--
