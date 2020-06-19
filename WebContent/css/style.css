@@ -221,6 +221,15 @@ h1 {
 	margin-left: 0.5%;
 }
 
+.spielregeln {
+	color: white;
+	margin: 0 auto;
+	margin: 10%;
+	font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+	font-size: 1.5vw;
+	line-height: 1.5;
+}
+
 .imprint {
 	color: white;
 	position: absolute;

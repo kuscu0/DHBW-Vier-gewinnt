@@ -174,8 +174,8 @@ public class Play extends HttpServlet
         if(buttonName.equals("helpBtn")) {
         	out.println(Constants.HTML_START);
         	
-        	out.println("<h1>Regeln</h1>" + 
-	        			"<p style=\"color: white; margin: 10%;\">Das Spiel wird auf einem senkrecht stehenden hohlen Spielbrett gespielt, in das die Spieler abwechselnd ihre Spielsteine fallen lassen." + 
+        	out.println("<h1>Spielregeln</h1>" + 
+	        			"<p class=\"spielregeln\">Das Spiel wird auf einem senkrecht stehenden hohlen Spielbrett gespielt, in das die Spieler abwechselnd ihre Spielsteine fallen lassen." + 
 	        			"Das Spielbrett besteht aus sieben Spalten (senkrecht) und sechs Reihen (waagerecht). Jeder Spieler besitzt 21 gleichfarbige Spielsteine." + 
 	        			"Wenn ein Spieler einen Spielstein in eine Spalte fallen lässt, besetzt dieser den untersten freien Platz der Spalte. Gewinner ist der" + 
 	        			"Spieler, der es als erster schafft, vier oder mehr seiner Spielsteine waagerecht, senkrecht oder diagonal in eine Linie zu bringen." + 
