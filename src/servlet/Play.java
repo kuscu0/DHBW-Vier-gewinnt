@@ -39,33 +39,7 @@ public class Play extends HttpServlet
     {	
         HttpSession session = getSession(request, sessionID);
         
-        
-        if(request.getParameter("playBtn") != null) {
-        	c = new Control();
-    		createBotMatch(session);
-    		printHtmlDoc(response, "playBtn", sessionID);
-        } else if(request.getParameter("2playersBtn") != null) {
-        	c = new Control();
-			createLocalMatch(session);
-			printHtmlDoc(response, "2playersBtn", sessionID);
-    	} else if(request.getParameter("onlineBtn") != null) {
-    		c = new Control();
-    		createOnlineMatch(session);
-    		printHtmlDoc(response, "onlineBtn", sessionID);
-        } else if(request.getParameter("helpBtn") != null) {
-        	printHtmlDoc(response, "helpBtn", sessionID);
-        } else if(request.getParameter("newOnlineGameBtn") != null) {
-    		c = new Control();
-    		createOnlineMatch(session);
-    		printHtmlDoc(response, "newOnlineGameBtn", sessionID);
-        } else if(request.getParameter("existingGameBtn") != null) {
-    		c = new Control();
-    		createOnlineMatch(session);
-    		printHtmlDoc(response, "existingGameBtn", sessionID);
-        } else if(request.getParameter("insertBtn") != null) { 
-        	insertCoin(session, request);
-        	printHtmlDoc(response, "insertBtn", sessionID);
-        }
+
     }
 
     /**
