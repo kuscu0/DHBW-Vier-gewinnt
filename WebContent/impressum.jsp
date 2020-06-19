@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +10,7 @@
 </head>
 <body>
 	<p style="color: white;">
-		Deniz Kuscu, Yegor Reichert, Pascal Simon, Jakob Jakobson, Fabian Fabianson<br>
+		Deniz Kuscu, Yegor Reichert, Pascal Simon, Jakob Stegmüller, Fabian Dittebrand<br>
 		Duale Hochschule Baden-Württemberg Karlsruhe <br>
 		Erzbergerstraße 121<br>
 		76133 Karlsruhe

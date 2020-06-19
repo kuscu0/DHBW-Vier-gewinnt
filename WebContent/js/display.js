@@ -16,7 +16,7 @@ function createTable(tablaData, parentNode) {
         var btn = document.createElement("button")
         btn.className = ("arrow-down");
         btn.id = ("btn_spalte_" + i)
-        btn.name = ("insertbtn")
+        btn.name = ("insertBtn")
         btn.value = i
         form.appendChild(btn);
         tField.appendChild(form);
