@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -38,44 +39,53 @@ public class Play extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response, String sessionID) throws ServletException, IOException
     {	
         HttpSession session = getSession(request, sessionID);
+        PrintWriter out = response.getWriter();
+        
+        Iterator<String> params = request.getParameterNames().asIterator();
+        
+        while (params.hasNext())
+        {
+        	System.out.println(params.next());
+        }
 
         if(request.getParameter("playBtn") != null)
         {
         	c = new Control();
     		createBotMatch(session);
-    		printHtmlDoc(response, "playBtn", sessionID);
+    		printHtmlGame(out, sessionID);
         } 
         else if(request.getParameter("2playersBtn") != null) 
         {
         	c = new Control();
 			createLocalMatch(session);
-			printHtmlDoc(response, "2playersBtn", sessionID);
+			printHtmlGame(out, sessionID);
     	} 
         else if(request.getParameter("onlineBtn") != null) 
     	{
     		c = new Control();
     		createOnlineMatch(session);
-    		printHtmlDoc(response, "onlineBtn", sessionID);
+    		printHtmlOnlineBtn(out, sessionID);
         } 
         else if(request.getParameter("helpBtn") != null)
         {
-        	printHtmlDoc(response, "helpBtn", sessionID);
+        	printHtmlHelp(out, sessionID);
         } 
         else if(request.getParameter("newOnlineGameBtn") != null) 
         {
     		c = new Control();
     		createOnlineMatch(session);
-    		printHtmlDoc(response, "newOnlineGameBtn", sessionID);
+    		printHtmlNewOnlineGame(out, sessionID);
         }
         else if(request.getParameter("existingGameBtn") != null) 
         {
     		c = new Control();
     		createOnlineMatch(session);
-    		printHtmlDoc(response, "existingGameBtn", sessionID);
-        } else if(request.getParameter("insertBtn") != null) 
+    		printHtmlExistingGame(out, sessionID);
+        } 
+        else if(request.getParameter("insertBtn") != null) 
         { 
         	insertCoin(session, request);
-        	printHtmlDoc(response, "insertBtn", sessionID);
+        	printHtmlGame(out, sessionID);
         }
     }
 
@@ -151,91 +161,109 @@ public class Play extends HttpServlet
     
     
     /**
-     * Prints the HTML Document so the Browser can show us the Output
+     * Prints the HTML Document of the Game so the Browser can show us the Output
+     * 
+     * @param out The PrintWriter of the ServletResponse
+     * @param sessionID The Session ID of the Match
      */
-    private void printHtmlDoc(HttpServletResponse response, String buttonName, String sessionID) throws IOException
+    private void printHtmlGame(PrintWriter out, String sessionID) throws IOException
     {
-        PrintWriter out = response.getWriter();
+      	out.println(Constants.HTML_START + Constants.BODY_START + Constants.BODY_GAME);
+        out.println(Constants.VAR_GAME_TABLE + Arrays.deepToString(c.getField()) + Constants.SEMICOLON + Constants.CREATE_TABLE);
         
-        if(buttonName.equals("insertBtn") || buttonName.equals("playBtn") || buttonName.equals("2playersBtn")) {
-        	out.println(Constants.HTML_START + Constants.BODY_START);
-            out.println(Constants.VAR_GAME_TABLE + Arrays.deepToString(c.getField()) + Constants.SEMICOLON + Constants.CREATE_TABLE);
-            
-            if(c.checkGewonnen()) 
-            {
-            	if(c.getPlayerWon() == 1)
-            	{
-            		out.println(Constants.REMOVE_BUTTON +
-            					Constants.H1_STATUS_TEXT + "Du hast das Spiel gewonnen!" + Constants.H1_END);
-            		
-            	}
-            	else if(c.getPlayerWon() == 2) 
-            	{
-            		out.println(Constants.REMOVE_BUTTON +
-            					Constants.H1_STATUS_TEXT + "Du hast verloren :( " + Constants.H1_END);
-            	}
-            }
-            
-            out.println(Constants.BACK_BUTTON +
-            			Constants.BODY_END +
-            			Constants.HTML_END);
-            
+        if(c.checkGewonnen()) 
+        {
+        	if(c.getPlayerWon() == 1)
+        	{
+        		out.println(Constants.REMOVE_BUTTON +
+        					Constants.H1_STATUS_TEXT + "Du hast das Spiel gewonnen!" + Constants.H1_END);
+        		
+        	}
+        	else if(c.getPlayerWon() == 2) 
+        	{
+        		out.println(Constants.REMOVE_BUTTON +
+        					Constants.H1_STATUS_TEXT + "Du hast verloren :( " + Constants.H1_END);
+        	}
         }
         
-        if(buttonName.equals("helpBtn")) {
-        	out.println(Constants.HTML_START);
-        	
-        	out.println("<h1>Spielregeln</h1>" + 
-	        			"<p class=\"spielregeln\">Das Spiel wird auf einem senkrecht stehenden hohlen Spielbrett gespielt, in das die Spieler abwechselnd ihre Spielsteine fallen lassen." + 
-	        			"Das Spielbrett besteht aus sieben Spalten (senkrecht) und sechs Reihen (waagerecht). Jeder Spieler besitzt 21 gleichfarbige Spielsteine." + 
-	        			"Wenn ein Spieler einen Spielstein in eine Spalte fallen lässt, besetzt dieser den untersten freien Platz der Spalte. Gewinner ist der" + 
-	        			"Spieler, der es als erster schafft, vier oder mehr seiner Spielsteine waagerecht, senkrecht oder diagonal in eine Linie zu bringen." + 
-	        			"Das Spiel endet unentschieden, wenn das Spielbrett komplett gefüllt ist, ohne dass ein Spieler eine Viererlinie gebildet hat. </p>");
-        	
-        	out.println(Constants.HTML_END);
-        }
-    	
-        if(buttonName.equals("onlineBtn")) {
-        	out.println(Constants.HTML_START);
-        	
-        	out.println("<body>" +
-        					"<form action=\"play\" method=\"post\">" +
-        						"<button name=\"newOnlineGameBtn\">Neues Spiel</button>" + 
-        						"<button name=\"existingGameBtn\">Bestehendem Spiel beitreten</button>" + 
-        					"</form>" + 
-        				"</body>");
-        	
-        	out.println(Constants.HTML_END);
-        	
-        }
-        
-        if(buttonName.equals("newOnlineGameBtn")) {
-        	out.println(Constants.HTML_START);
-        	
-        	out.println("<body>" +
-        					"<p style=\"color: white;\">Deine Session ID: " + sessionID + "</p>" + 
-        				"</body>");
-        	
-        	out.println(Constants.HTML_END);
-        	
-        }
-        
-        if(buttonName.equals("existingGameBtn")) {
-        	out.println(Constants.HTML_START);
-        	
-        	out.println("<body>" +
-        					"<form action=\"play\" method=\"post\">" +
-        						"<label for=\"sessid\" style=\"color: white;\">Session ID:</label><br>\n" + 
-        						"<input type=\"text\" id=\"sessid\" name=\"sessid\" value=\"\"><br>" +
-        						"<button name=\"joinGameBtn\">Beitreten!</button>" + 
-        					"</form>" + 
-        				"</body>");
-        	
-        	out.println(Constants.HTML_END);
-        	
-        }
-        
+        out.println(Constants.BACK_BUTTON +
+        			Constants.BODY_END +
+        			Constants.HTML_END);        
         out.close();
     }
     
+    
+    /**
+     * Prints the HTML Document of Document when you want to join an Online Match so the Browser can show us the Output
+     * 
+     * @param out The PrintWriter of the ServletResponse
+     * @param sessionID The Session ID of the Match
+     */
+    private void printHtmlOnlineBtn(PrintWriter out, String sessionID)
+    {
+    	out.println(Constants.HTML_START);
+    	out.println(Constants.BODY_START +
+    					Constants.BODY_ONLINE_BTN +
+    					Constants.BACK_BUTTON +
+    				Constants.BODY_END);
+    	out.println(Constants.HTML_END);
+    	
+    	out.close();
+    }
+    
+    /**
+     * Prints the HTML Document of an New Online Game so the Browser can show us the Output
+     * 
+     * @param out The PrintWriter of the ServletResponse
+     * @param sessionID The Session ID of the Match
+     */
+    private void printHtmlNewOnlineGame(PrintWriter out, String sessionID)
+    {
+    	out.println(Constants.HTML_START);
+    	out.println(Constants.BODY_START +
+    					Constants.BODY_NEW_ONLINE_GAME_PARAGRAPH_START + sessionID + Constants.PARAGRAPH_END + 
+    					Constants.BACK_BUTTON + 
+    				Constants.BODY_END);
+    	out.println(Constants.HTML_END);
+    	
+    	out.close();
+    }
+    
+    /**
+     * Prints the HTML Document of Help Page so the Browser can show us the Output
+     * 
+     * @param out The PrintWriter of the ServletResponse
+     * @param sessionID The Session ID of the Match
+     */
+    private void printHtmlHelp(PrintWriter out, String sessionID)
+    {
+    	out.println(Constants.HTML_START);
+    	out.println(Constants.BODY_START +
+    					Constants.BODY_HELP +
+    					Constants.BACK_BUTTON +
+    				Constants.BODY_END);
+    	out.println(Constants.HTML_END);
+    	
+    	out.close();
+    }
+    
+    /**
+     * Prints the HTML Document of an Existing Online Game so the Browser can show us the Output
+     * 
+     * @param out The PrintWriter of the ServletResponse
+     * @param sessionID The Session ID of the Match
+     */
+    private void printHtmlExistingGame(PrintWriter out, String sessionID)
+    {
+    	out.println(Constants.HTML_START);
+    	
+    	out.println(Constants.BODY_START +
+    					Constants.BODY_EXISTING_GAME +
+    					Constants.BACK_BUTTON +  
+    				Constants.BODY_END);
+    	
+    	out.println(Constants.HTML_END);
+    	
+    	out.close();
+    }
 }
