@@ -188,7 +188,8 @@ public class Play extends HttpServlet
         
         out.println(Constants.BACK_BUTTON +
         			Constants.BODY_END +
-        			Constants.HTML_END);        
+        			Constants.HTML_END);     
+        
         out.close();
     }
     
