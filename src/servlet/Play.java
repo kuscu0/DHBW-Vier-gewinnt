@@ -40,10 +40,7 @@ public class Play extends HttpServlet
         HttpSession session = getSession(request, sessionID);
         
         
-        if(request.getParameter("insertBtn") != null) { 
-        	insertCoin(session, request);
-        	printHtmlDoc(response, "insertBtn", sessionID);
-        } else if(request.getParameter("playBtn") != null) {
+        if(request.getParameter("playBtn") != null) {
         	c = new Control();
     		createBotMatch(session);
     		printHtmlDoc(response, "playBtn", sessionID);
@@ -55,6 +52,8 @@ public class Play extends HttpServlet
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlDoc(response, "onlineBtn", sessionID);
+        } else if(request.getParameter("helpBtn") != null) {
+        	printHtmlDoc(response, "helpBtn", sessionID);
         } else if(request.getParameter("newOnlineGameBtn") != null) {
     		c = new Control();
     		createOnlineMatch(session);
@@ -63,9 +62,10 @@ public class Play extends HttpServlet
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlDoc(response, "existingGameBtn", sessionID);
+        } else if(request.getParameter("insertBtn") != null) { 
+        	insertCoin(session, request);
+        	printHtmlDoc(response, "insertBtn", sessionID);
         }
-        
-        
     }
 
     /**
@@ -169,6 +169,19 @@ public class Play extends HttpServlet
             			Constants.BODY_END +
             			Constants.HTML_END);
             
+        }
+        
+        if(buttonName.equals("helpBtn")) {
+        	out.println(Constants.HTML_START);
+        	
+        	out.println("<h1>Regeln</h1>" + 
+	        			"<p style=\"color: white; margin: 10%;\">Das Spiel wird auf einem senkrecht stehenden hohlen Spielbrett gespielt, in das die Spieler abwechselnd ihre Spielsteine fallen lassen." + 
+	        			"Das Spielbrett besteht aus sieben Spalten (senkrecht) und sechs Reihen (waagerecht). Jeder Spieler besitzt 21 gleichfarbige Spielsteine." + 
+	        			"Wenn ein Spieler einen Spielstein in eine Spalte fallen lässt, besetzt dieser den untersten freien Platz der Spalte. Gewinner ist der" + 
+	        			"Spieler, der es als erster schafft, vier oder mehr seiner Spielsteine waagerecht, senkrecht oder diagonal in eine Linie zu bringen." + 
+	        			"Das Spiel endet unentschieden, wenn das Spielbrett komplett gefüllt ist, ohne dass ein Spieler eine Viererlinie gebildet hat. </p>");
+        	
+        	out.println(Constants.HTML_END);
         }
     	
         if(buttonName.equals("onlineBtn")) {
