@@ -1,11 +1,22 @@
 package bean;
 
+import java.io.Serializable;
+
 import javax.servlet.http.HttpSession;
 
 import bean.Control;
 
-public class Control
+/**
+ * @author pascalsimon
+ *
+ */
+/**
+ * @author pascalsimon
+ *
+ */
+public class Control implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 7;
 	private static final int HEIGHT = 6;
 		
@@ -20,6 +31,11 @@ public class Control
 	
 	
 
+	/**
+	 * This function needs to be called when starting an round
+	 * 
+	 * @param playAgainstBot If a Bot is enabled as Second Player
+	 */
 	public void newRound(boolean playAgainstBot)
 	{
 		clearField();
@@ -30,6 +46,9 @@ public class Control
 		playerWon = 0;
 	}
 	
+	/**
+	 * This Method needs to be called after setting an Chip
+	 */
 	public void nextRound() 
 	{
 		if (activePlayer == 1)
@@ -46,6 +65,13 @@ public class Control
 		}
 	}
 
+	
+	/**
+	 * This function sets an Chip on the field. Needs to call nextRound() afterwards.
+	 * 
+	 * @param column The Coulum in which the chip should be placed
+	 * @return If the Chip could be set in this Column
+	 */
 	public boolean setChip(int column)
 	{	
 		round++;
@@ -70,17 +96,26 @@ public class Control
 	}
 	
 	
+	/**
+	 * @return The field.
+	 */
 	public int[][] getField()
 	{
 		return field;
 	}
 	
 	
+	/**
+	 * @return The player which has won. 0 if the game is still active.
+	 */
 	public int getPlayerWon()
 	{
 		return playerWon;
 	}
 	
+	/**
+	 * @return The layer which won as an String.
+	 */
 	public String getPlayerWonToString()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -91,6 +126,9 @@ public class Control
 		return sb.toString();
 	}
 	
+	/**
+	 * Sets the filed on default.
+	 */
 	private void clearField()
 	{
 		for(int y = 0; y < HEIGHT; y++)
@@ -103,6 +141,9 @@ public class Control
 	}
 	
 	
+	/**
+	 * @return if the Player which of this round has won.
+	 */
 	public boolean checkGewonnen()
 	{
 		int chipOfLastPosition = field[lastRow][lastColumn];
@@ -110,6 +151,12 @@ public class Control
 	}
 	
 	
+	/**
+	 * @param x Column
+	 * @param y Row
+	 * @param chip Chipcolor of Player
+	 * @return If the Player with this Chip Won on the given Position.
+	 */
 	private boolean checkGewonnen(int x, int y, int chip)
 	{
 		boolean finished = checkInARow(x, y, chip, 4);
@@ -120,12 +167,27 @@ public class Control
 	}
 	
 	
+	/**
+	 * @param x Column
+	 * @param y Row
+	 * @param chip Chipcolor of Player
+	 * @param length The length of chips in a Row, after which should be checked
+	 * @return If there is a row with the given length
+	 */
 	private boolean checkInARow(int x, int y, int chip, int length)
 	{
 		return checkInARowWithOffset(x, y, chip, length, 0);
 	}
 	
 	
+	/**
+	 * @param x Column
+	 * @param y Row
+	 * @param chip Chipcolor of Player
+	 * @param length The length of chips in a Row, after which should be checked
+	 * @param offset An offset added to the real length of the row.
+	 * @return If there is a Row with the given length and a offset.
+	 */
 	private boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset)
 	{
 		if (!(0 <= y && y < HEIGHT) || !(0 <= x && x < WIDTH)) return false;
@@ -138,7 +200,14 @@ public class Control
 		return horizontal || vertical || sidewaysLeft || sidewaysRight;
 	}
 	
-	
+	/**
+	 * @param x Column
+	 * @param y Row
+	 * @param chip Chipcolor of Player
+	 * @param length The length of chips in a Row, after which should be checked
+	 * @param offset An offset added to the real length of the row.
+	 * @return If there is a Horizontal Row with the given length and a offset.
+	 */
 	private boolean checkHorizontal(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
@@ -155,6 +224,14 @@ public class Control
 		return line >= length;
 	}
 	
+	/**
+	 * @param x Column
+	 * @param y Row
+	 * @param chip Chipcolor of Player
+	 * @param length The length of chips in a Row, after which should be checked
+	 * @param offset An offset added to the real length of the row.
+	 * @return If there is a Vertical Row with the given length and a offset.
+	 */
 	private boolean checkVertical(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
@@ -168,7 +245,15 @@ public class Control
 		return line >= length;
 	}
 	
-	//Right Up
+	/**
+	 * This Method checks after Rows from DownLeft to UpRight
+	 * @param x Column
+	 * @param y Row
+	 * @param chip Chipcolor of Player
+	 * @param length The length of chips in a Row, after which should be checked
+	 * @param offset An offset added to the real length of the row.
+	 * @return If there is a Diagonal Row with the given length and a offset.
+	 */
 	private boolean checkSidewaysRight(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
@@ -186,7 +271,15 @@ public class Control
 		return line >= length;
 	}
 	
-	//Left Up
+	/**
+	 * This Method checks after Rows from UpLeft to DownRight
+	 * @param x Column 
+	 * @param y Row
+	 * @param chip Chipcolor of Player
+	 * @param length The length of chips in a Row, after which should be checked
+	 * @param offset An offset added to the real length of the row.
+	 * @return If there is a Diagonal Row with the given length and a offset.
+	 */
 	private boolean checkSidewaysLeft(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
@@ -204,6 +297,12 @@ public class Control
 		return line >= length;
 	}
 	
+	
+	/**
+	 * This Method has to be called after nextRound().
+	 * 
+	 * @param session The Session which should be refreshed.
+	 */
 	public void setRefresh(HttpSession session) {
 		session.setAttribute("field", field);
 		session.setAttribute("activePlayer", activePlayer);
@@ -213,6 +312,12 @@ public class Control
 		session.setAttribute("lastRow", lastRow);
 	}
 	
+	
+	/**
+	 *  This Method has to be called before setChip().
+	 * 
+	 * @param session The session which the Match is played in.
+	 */
 	public void getRefresh(HttpSession session) {
 		field = (int[][]) session.getAttribute("field");
 		activePlayer = (int) session.getAttribute("activePlayer");
@@ -222,9 +327,11 @@ public class Control
 		lastRow = (int) session.getAttribute("lastRow");
 	}
 
-	//
-	//The Bot
-	//
+	/**
+	 * @author pascalsimon
+	 *
+	 * The Bot which the player plays against.
+	 */
 	public class Bot 
 	{
 		private Control c;
@@ -236,6 +343,12 @@ public class Control
 			width = widthOfField;
 		}
 		
+		/**
+		 * This Method let the Bot play a Rpound and sets his chip.
+		 * 
+		 * @param lastColumn The Last Column of the Player before
+		 * @param lastRow The Last Row of the Player before
+		 */
 		public void nextRound(int lastColumn, int lastRow) 
 		{	
 			boolean threeInARow = c.checkInARow(lastColumn, lastRow, 1, 3);
@@ -254,6 +367,13 @@ public class Control
 		}
 		
 		
+		/**
+		 * This Method calculates the Column which the Bpt has to set his chip, so the player wont win.
+		 * 
+		 * @param x Column
+		 * @param y Row
+		 * @return The Column which the bot has to set a chip or -1
+		 */
 		private int getColumnWhichPlayerWins(int x, int y)
 		{
 			int[][] field = c.getField();

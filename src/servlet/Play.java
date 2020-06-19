@@ -21,17 +21,23 @@ public class Play extends HttpServlet
 	Control c;
     private RoundType roundType;
     
+
+    /**
+     *  The Overriden Servlet Function
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {	
     	doPost(request, response, null);
     }
     
 
+    
+    /**
+     * @param sessionID The ID of the existing Session ID, which you want to join (For Online Player mostly)
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response, String sessionID) throws ServletException, IOException
     {	
         HttpSession session = getSession(request, sessionID);
-        
-        System.out.println(session.getId());
         
         if(request.getParameter("insertbtn") != null) insertCoin(session, request);
         else 
@@ -39,48 +45,67 @@ public class Play extends HttpServlet
         	c = new Control();
         	if(request.getParameter("playBtn") != null)  createBotMatch(session);
     		else if(request.getParameter("2playersBtn") != null) createLocalMatch(session);
-//    		else if (request.getParameter("") != null) createOnlineMatch(session);
+    		else if (request.getParameter("") != null) createOnlineMatch(session);
     	}
         
         printHtmlDoc(response);
     }
 
+    /**
+     * @param request The HttpRequest where the session should come from
+     * @param sessionID An already existing session ID or null
+     * @return The Session which the Player will play on the Server
+     */
     private HttpSession getSession(HttpServletRequest request, String sessionID)
     {
     	HttpSession session = request.getSession();
         if (sessionID != null)
         {
-        	System.out.println("Session ID is null");
         	ServletContext srvContext = getServletContext();
         	session = (HttpSession) srvContext.getAttribute(sessionID);
         }
         return session;
     }
     
+    /**
+     * Creates a Local Game With Two Player on the given Session.
+     * Needs to run getSession(HttpServletRequest request, String sessionID) before
+     */
     private void createLocalMatch(HttpSession session)
     {
-    	System.out.println("Created Local Match");
 		c.newRound(false);
 		c.setRefresh(session);
     	roundType = RoundType.LOCAL;
     }
     
+    /**
+     * Creates a Local Game against an Bot on the given Session.
+     * Needs to run getSession(HttpServletRequest request, String sessionID) before
+     */
     private void createBotMatch(HttpSession session)
     {
-    	System.out.println("Created Bot Match");
 		c.newRound(true);
 		c.setRefresh(session);
     	roundType = RoundType.BOT;
     }
     
+    /**
+     * Creates a Online Game With Two Player on the given Session.
+     * Needs to run getSession(HttpServletRequest request, String sessionID) before
+     */
     private void createOnlineMatch(HttpSession session)
     {
-    	System.out.println("Created Online Match");
     	c.newRound(false);
     	c.setRefresh(session);
     	roundType = RoundType.ONLINE;
     }
     
+    /**
+     * With this function a round is played
+     * 
+     * @param session
+     * @param request
+     */
     private void insertCoin(HttpSession session, HttpServletRequest request)
     {
 		c.getRefresh(session);
@@ -96,6 +121,10 @@ public class Play extends HttpServlet
         c.setRefresh(session);
     }
     
+    
+    /**
+     * Prints the HTML Document so the Browser can show us the Output
+     */
     private void printHtmlDoc(HttpServletResponse response) throws IOException
     {
         PrintWriter out = response.getWriter();
@@ -118,8 +147,8 @@ public class Play extends HttpServlet
         	}
         }
         
-        out.println(		Constants.BACK_BUTTON +
-        				Constants.BODY_END +
+        out.println(Constants.BACK_BUTTON +
+        			Constants.BODY_END +
         			Constants.HTML_END);
         
         out.close();
