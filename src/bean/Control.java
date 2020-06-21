@@ -20,6 +20,7 @@ public class Control implements Serializable
 		
 	private int[][] field = new int[HEIGHT][WIDTH];
 	
+	private boolean matchFull = true;
 	private int activePlayer = 1;
 	private int round = 0;
 	private int playerWon = 0;
@@ -38,7 +39,9 @@ public class Control implements Serializable
 	public void newRound(RoundType roundType)
 	{
 		clearField();
+		
 		if (roundType == RoundType.BOT) bot = new Bot(this, WIDTH);
+		else if (roundType == RoundType.ONLINE) matchFull = false;
 			
 		this.roundType = roundType;
 		activePlayer = 1;
@@ -51,6 +54,8 @@ public class Control implements Serializable
 	 */
 	public void nextRound() 
 	{
+		if (!matchFull) return;
+		
 		if (activePlayer == 1)
 		{
 			activePlayer = 2;
@@ -74,6 +79,8 @@ public class Control implements Serializable
 	 */
 	public boolean setChip(int column)
 	{	
+		if (!matchFull) return false;
+		
 		round++;
 		
 		int chipColor = activePlayer;
@@ -312,13 +319,15 @@ public class Control implements Serializable
 	 * 
 	 * @param session The Session which should be refreshed.
 	 */
-	public void setRefresh(HttpSession session) {
-		session.setAttribute("field", field);
-		session.setAttribute("activePlayer", activePlayer);
-		session.setAttribute("round", round);
-		session.setAttribute("playerWon", playerWon);
-		session.setAttribute("lastColumn", lastColumn);
-		session.setAttribute("lastRow", lastRow);
+	public void setRefresh(HttpSession session) 
+	{
+		session.setAttribute(Constants.ATTRIBUTE_FIELD, field);
+		session.setAttribute(Constants.ATTRIBUTE_ACTIVE_PLAYER, activePlayer);
+		session.setAttribute(Constants.ATTRIBUTE_ROUND, round);
+		session.setAttribute(Constants.ATTRIBUTE_PLAYER_WON, playerWon);
+		session.setAttribute(Constants.ATTRIBUTE_LAST_COLUMN, lastColumn);
+		session.setAttribute(Constants.ATTRIBUTE_LAST_ROW, lastRow);
+		session.setAttribute(Constants.ATTRIBUTE_ROUND_TYPE, roundType);
 	}
 	
 	
@@ -327,13 +336,15 @@ public class Control implements Serializable
 	 * 
 	 * @param session The session which the Match is played in.
 	 */
-	public void getRefresh(HttpSession session) {
-		field = (int[][]) session.getAttribute("field");
-		activePlayer = (int) session.getAttribute("activePlayer");
-		round = (int) session.getAttribute("round");
-		playerWon = (int) session.getAttribute("playerWon");
-		lastColumn = (int) session.getAttribute("lastColumn");
-		lastRow = (int) session.getAttribute("lastRow");
+	public void getRefresh(HttpSession session) 
+	{
+		field = (int[][]) session.getAttribute(Constants.ATTRIBUTE_FIELD);
+		activePlayer = (int) session.getAttribute(Constants.ATTRIBUTE_ACTIVE_PLAYER);
+		round = (int) session.getAttribute(Constants.ATTRIBUTE_ROUND);
+		playerWon = (int) session.getAttribute(Constants.ATTRIBUTE_PLAYER_WON);
+		lastColumn = (int) session.getAttribute(Constants.ATTRIBUTE_LAST_COLUMN);
+		lastRow = (int) session.getAttribute(Constants.ATTRIBUTE_LAST_ROW);
+		roundType = (RoundType) session.getAttribute(Constants.ATTRIBUTE_ROUND_TYPE);
 	}
 
 	/**
