@@ -19,8 +19,7 @@ public class Play extends HttpServlet
 {
 	private static final long serialVersionUID = 2893048395274292624L;
 
-	Control c;
-    private RoundType roundType;
+	private Control c;
     
 
     /**
@@ -52,40 +51,42 @@ public class Play extends HttpServlet
         {
         	c = new Control();
     		createBotMatch(session);
-    		printHtmlGame(out, sessionID);
+    		printHtmlGame(out, session.getId());
         } 
         else if(request.getParameter("2playersBtn") != null) 
         {
         	c = new Control();
 			createLocalMatch(session);
-			printHtmlGame(out, sessionID);
+			printHtmlGame(out, session.getId());
     	} 
         else if(request.getParameter("onlineBtn") != null) 
     	{
     		c = new Control();
     		createOnlineMatch(session);
-    		printHtmlOnlineBtn(out, sessionID);
+    		printHtmlOnlineBtn(out, session.getId());
         } 
         else if(request.getParameter("helpBtn") != null)
         {
-        	printHtmlHelp(out, sessionID);
+        	printHtmlHelp(out, session.getId());
         } 
         else if(request.getParameter("newOnlineGameBtn") != null) 
         {
     		c = new Control();
     		createOnlineMatch(session);
-    		printHtmlNewOnlineGame(out, sessionID);
+    		printHtmlNewOnlineGame(out, session.getId());
         }
         else if(request.getParameter("existingGameBtn") != null) 
         {
-    		c = new Control();
-    		createOnlineMatch(session);
-    		printHtmlExistingGame(out, sessionID);
+    		printHtmlExistingGame(out, session.getId());
         } 
         else if(request.getParameter("insertBtn") != null) 
         { 
         	insertCoin(session, request);
-        	printHtmlGame(out, sessionID);
+        	printHtmlGame(out, session.getId());
+        }
+        else if(request.getParameter("joinGameBtn") != null)
+        {
+        	
         }
     }
 
@@ -111,9 +112,8 @@ public class Play extends HttpServlet
      */
     private void createLocalMatch(HttpSession session)
     {
-		c.newRound(false);
+		c.newRound(RoundType.LOCAL);
 		c.setRefresh(session);
-    	roundType = RoundType.LOCAL;
     }
     
     /**
@@ -122,9 +122,8 @@ public class Play extends HttpServlet
      */
     private void createBotMatch(HttpSession session)
     {
-		c.newRound(true);
+		c.newRound(RoundType.BOT);
 		c.setRefresh(session);
-    	roundType = RoundType.BOT;
     }
     
     /**
@@ -133,9 +132,8 @@ public class Play extends HttpServlet
      */
     private void createOnlineMatch(HttpSession session)
     {
-    	c.newRound(false);
+    	c.newRound(RoundType.ONLINE);
     	c.setRefresh(session);
-    	roundType = RoundType.ONLINE;
     }
     
     /**
@@ -147,7 +145,7 @@ public class Play extends HttpServlet
     private void insertCoin(HttpSession session, HttpServletRequest request)
     {
 		c.getRefresh(session);
-    	if (roundType == RoundType.ONLINE)
+    	if (c.getRoundType() == RoundType.ONLINE)
     	{
 
     	}

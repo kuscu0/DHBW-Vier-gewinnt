@@ -5,11 +5,9 @@ import java.io.Serializable;
 import javax.servlet.http.HttpSession;
 
 import bean.Control;
+import servlet.RoundType;
 
-/**
- * @author pascalsimon
- *
- */
+
 /**
  * @author pascalsimon
  *
@@ -28,19 +26,21 @@ public class Control implements Serializable
 	private int lastColumn, lastRow;
 	
 	private Bot bot;
+	private RoundType roundType;
 	
 	
 
 	/**
 	 * This function needs to be called when starting an round
 	 * 
-	 * @param playAgainstBot If a Bot is enabled as Second Player
+	 * @param roundType The type of the Round
 	 */
-	public void newRound(boolean playAgainstBot)
+	public void newRound(RoundType roundType)
 	{
 		clearField();
-		if (playAgainstBot) bot = new Bot(this, WIDTH);
+		if (roundType == RoundType.BOT) bot = new Bot(this, WIDTH);
 			
+		this.roundType = roundType;
 		activePlayer = 1;
 		round = 0;
 		playerWon = 0;
@@ -111,6 +111,15 @@ public class Control implements Serializable
 	public int getPlayerWon()
 	{
 		return playerWon;
+	}
+	
+	
+	/**
+	 * @return The type of the Match
+	 */
+	public RoundType getRoundType()
+	{
+		return roundType;
 	}
 	
 	/**
@@ -357,7 +366,6 @@ public class Control implements Serializable
 			
 			if (threeInARow)
 			{
-//				System.out.println("Three in a Row");
 				int columnPlayerWin = getColumnWhichPlayerWins(lastColumn, lastRow);
 				if (columnPlayerWin >= 0) column = columnPlayerWin;
 			}
@@ -409,21 +417,17 @@ public class Control implements Serializable
 			
 			if (columnToTheLeft) 
 			{
-//				System.out.println("Left: " + (x - 1));
 				return x - 1;
 			}
 			if (thisColumn) 
 			{
-//				System.out.println("This: " + (x));
 				return x;
 			}
 			if (columnToTheRight) 
 			{
-//				System.out.println("Right: " + (x + 1));
 				return x + 1;
 			}
 			
-//			System.out.println("Nothing");
 			return -1;
 		}
 	}
