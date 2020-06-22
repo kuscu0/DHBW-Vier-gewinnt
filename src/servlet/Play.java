@@ -86,7 +86,7 @@ public class Play extends HttpServlet
         }
         else if(request.getParameter("joinGameBtn") != null)
         {
-        	
+        	printHtmlGame(out, session.getId());
         }
     }
 
