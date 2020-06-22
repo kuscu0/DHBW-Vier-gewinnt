@@ -40,6 +40,7 @@ function createTable(tablaData, parentNode) {
             tRow.appendChild(tField);
         }
         table.appendChild(tRow);
+        
     }
 
 
@@ -99,7 +100,7 @@ function animateFall(cordEnd , cordCurrent){
 function getChanged(tableData){
     for (var i = 0; i < 6; i++) {
         for (var j = 0; j < 7; j++) {
-        	if(tableData[i][j] > 2){
+        	if(tableData[i][j] >= 3){
         		var cord = {
         				xCord : j,
         				yCord : i,
