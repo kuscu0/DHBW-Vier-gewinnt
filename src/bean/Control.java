@@ -1,6 +1,7 @@
 package bean;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpSession;
 
@@ -117,7 +118,11 @@ public class Control implements Serializable
 	 */
 	public int[][] getFieldWithNewestChip()
 	{
-		int[][] tempField = field;
+	    final int[][] tempField = new int[HEIGHT][WIDTH];
+	    for (int i = 0; i < HEIGHT; i++) {
+	    	tempField[i] = Arrays.copyOf(field[i], field[i].length);
+	    }
+	    
 		if (0 <= lastRow && lastRow < tempField[0].length && 0 <= lastColumn && lastColumn <= tempField.length)
 		{
 			tempField[lastRow][lastColumn] = tempField[lastRow][lastColumn] + 2;

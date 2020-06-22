@@ -39,14 +39,14 @@ public class Play extends HttpServlet
     {	
         HttpSession session = getSession(request, sessionID);
         PrintWriter out = response.getWriter();
-        
+        /*
         Iterator<String> params = request.getParameterNames().asIterator();
         
         while (params.hasNext())
         {
         	System.out.println(params.next());
         }
-
+*/
         if(request.getParameter("playBtn") != null)
         {
         	c = new Control();
@@ -167,7 +167,7 @@ public class Play extends HttpServlet
     private void printHtmlGame(PrintWriter out, String sessionID) throws IOException
     {
       	out.println(Constants.HTML_START + Constants.BODY_START + Constants.BODY_GAME);
-        out.println(Constants.VAR_GAME_TABLE + Arrays.deepToString(c.getField()) + Constants.SEMICOLON + Constants.CREATE_TABLE);
+        out.println(Constants.VAR_GAME_TABLE + Arrays.deepToString(c.getFieldWithNewestChip()) + Constants.SEMICOLON + Constants.CREATE_TABLE);
         
         if(c.checkGewonnen()) 
         {
