@@ -24,7 +24,7 @@ public class Control implements Serializable
 	private int activePlayer = 1;
 	private int round = 0;
 	private int playerWon = 0;
-	private int lastColumn, lastRow;
+	private int lastColumn = -1, lastRow = -1;
 	
 	private Bot bot;
 	private RoundType roundType;
