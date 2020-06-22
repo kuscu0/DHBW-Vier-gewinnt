@@ -176,6 +176,7 @@ public class Control implements Serializable
 	 */
 	public boolean checkGewonnen()
 	{
+		if (lastRow >= 0 && lastColumn >= 0) return false;
 		int chipOfLastPosition = field[lastRow][lastColumn];
 		return checkGewonnen(lastColumn, lastRow, chipOfLastPosition);
 	}
