@@ -104,11 +104,25 @@ public class Control implements Serializable
 	
 	
 	/**
-	 * @return The field.
+	 * @return The actual field.
 	 */
 	public int[][] getField()
 	{
 		return field;
+	}
+	
+	
+	/**
+	 * @return The field with the last set Chips value +2.
+	 */
+	public int[][] getFieldWithNewestChip()
+	{
+		int[][] tempField = field.clone();
+		if (0 <= lastRow && lastRow < tempField[0].length && 0 <= lastColumn && lastColumn <= tempField.length)
+		{
+			tempField[lastRow][lastColumn] = tempField[lastRow][lastColumn] + 2;
+		}
+		return tempField;
 	}
 	
 	
