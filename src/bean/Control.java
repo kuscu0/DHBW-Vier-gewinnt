@@ -117,7 +117,7 @@ public class Control implements Serializable
 	 */
 	public int[][] getFieldWithNewestChip()
 	{
-		int[][] tempField = field.clone();
+		int[][] tempField = field;
 		if (0 <= lastRow && lastRow < tempField[0].length && 0 <= lastColumn && lastColumn <= tempField.length)
 		{
 			tempField[lastRow][lastColumn] = tempField[lastRow][lastColumn] + 2;
@@ -176,7 +176,7 @@ public class Control implements Serializable
 	 */
 	public boolean checkGewonnen()
 	{
-		if (lastRow >= 0 && lastColumn >= 0) return false;
+		if (lastRow == -1 && lastColumn == -1) return false;
 		int chipOfLastPosition = field[lastRow][lastColumn];
 		return checkGewonnen(lastColumn, lastRow, chipOfLastPosition);
 	}
