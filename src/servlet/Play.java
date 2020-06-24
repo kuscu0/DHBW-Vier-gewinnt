@@ -64,6 +64,7 @@ public class Play extends HttpServlet
     		c = new Control();
     		createOnlineMatch(session);
     		printHtmlOnlineBtn(out, sessionID);
+    		
         } 
         else if(request.getParameter("helpBtn") != null)
         {
@@ -135,6 +136,7 @@ public class Play extends HttpServlet
     	c.newRound(false);
     	c.setRefresh(session);
     	roundType = RoundType.ONLINE;
+    	new Match(session);
     }
     
     /**
