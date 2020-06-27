@@ -1,52 +1,98 @@
 package bean;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.UUID;
 
-import javax.websocket.*;
-import javax.websocket.server.*;
-
-import org.apache.jasper.tagplugins.jstl.core.ForEach;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
 
 import com.google.gson.Gson;
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+
+import bean.method.ConnectionEstablished;
 
 @ServerEndpoint("/socket")
 public class WebSocket {
-	private static Set<Session> peers = new HashSet<>();
-	
-	
+	// private static Set<Session> peers = new HashSet<>();
+	private static final Gson gson = new Gson();
+	private static final JsonParser parser = new JsonParser();
+
+	@OnOpen
+	public void onOpen(Session session) throws IOException {
+		System.out.println("Session " + session.getId() + " has opened");
+	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) throws IOException, InterruptedException {
-
-		// Print the client message for testing purposes
-		System.out.println("Received: " + message);
-
-		// Send the first message to the client
-		session.getBasicRemote().sendText("This is the first server message");
-
-		// Send 3 messages to the client every 5 seconds
-		int sentMessages = 0;
-		while (sentMessages < 3) {
-			Thread.sleep(5000);
-			session.getBasicRemote().sendText("This is an intermediate server message. Count: " + sentMessages);
-			sentMessages++;
+		final JsonElement json = parser.parse(message);
+		
+		if(!json.isJsonObject()) {
+			error("not an object", json);
+			return;
 		}
+		
+		final JsonObject jsonObject = json.getAsJsonObject();
+		final JsonElement methodJson = jsonObject.get("method");
+		
+		if(methodJson == null || !methodJson.isJsonPrimitive()) {
+			error("method", methodJson);
+			return;
+		}
+		
+		final JsonPrimitive methodPrimitive = methodJson.getAsJsonPrimitive();
+		
+		if(!methodPrimitive.isString()) {
+			error("method", methodPrimitive);
+			return;
+		}
+		
+		final String method = methodPrimitive.getAsString();
+		final String response;
+		
+		switch(method) {
+		case "connect":
+			response = handleConnect();
+			break;
+		default:
+			error("method", method);
+			return;
+		}
+		
+		session.getBasicRemote().sendText(response);
+		
+		
+		
 
-		// Send a final message to the client
-		session.getBasicRemote().sendText("This is the last server message");
-		
-		
+//		// Print the client message for testing purposes
+//		System.out.println("Received: " + message);
+//
+//		// Send the first message to the client
+//		session.getBasicRemote().sendText("This is the first server message");
+//
+//		// Send 3 messages to the client every 5 seconds
+//		//int sentMessages = 0;
+//		while (peers.size() > 0) {
+//			Thread.sleep(5000);
+//			Service.broadcast(peers);
+//			//session.getBasicRemote().sendText("This is an intermediate server message. Count: " + sentMessages);
+//			//sentMessages++;
+//		}
+//
+//		// Send a final message to the client
+//		session.getBasicRemote().sendText("This is the last server message");
+
 //		//TODO Look for errors
 //		JsonParser parser = new JsonParser();
 //		JsonObject obj = parser.parse(message).getAsJsonObject();
 //		String type = obj.get("type").getAsString();
 //		
-		
+
 //		switch(type) {
 //		case "newGame":
 //			System.out.println("new game was started");
@@ -58,31 +104,28 @@ public class WebSocket {
 //			System.out.println("Error no explicit type");
 //		}
 	}
-
-	@OnOpen
-	public void onOpen(Session session) {
-		System.out.println("Client connected");
-		System.out.println(session.getId() + "has opened a connection");
-
-		try {
-			session.getBasicRemote().sendText("Connection established");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		peers.add(session);
-		System.out.println("My peers: " + peers);
+	
+	private String handleConnect() {
+		final String clientId = UUID.randomUUID().toString();
+		final ConnectionEstablished json = new ConnectionEstablished(clientId);
+		final String response = gson.toJson(json);
+		return response;
 	}
 
 	@OnClose
 	public void onClose(Session session) {
-		System.out.println("Connection closed");
-		peers.remove(session);
+		// peers.remove(session);
 		System.out.println("Session " + session.getId() + " has ended");
 	}
 
-	public void sendMesage(String message) throws IOException {
-		for (Session peer : peers) {
-			peer.getBasicRemote().sendText(message);
-		}
+//	public void sendMesage(String message) throws IOException {
+//      peers.stream().forEach(peer -> peer.getBasicRemote().sendText(message));
+//		for (Session peer : peers) {
+//			peer.getBasicRemote().sendText(message);
+//		}1
+//	}
+	
+	private static void error(final String message, final Object json) {
+		System.out.println("Malformed request (" + message + "): " + json);
 	}
 }

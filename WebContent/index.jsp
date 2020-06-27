@@ -31,67 +31,64 @@
 </body>
 
 <script type="text/javascript">
-	const clients = {};
+	// const clients = {};
 
-	function create_UUID() {
-		var dt = new Date().getTime();
-		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-			var r = (dt + Math.random() * 16) % 16 | 0;
-			dt = Math.floor(dt / 16);
-			return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-		});
-		return uuid;
-	}
+	// function create_UUID() {
+	// 	var dt = new Date().getTime();
+	// 	var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+	// 		var r = (dt + Math.random() * 16) % 16 | 0;
+	// 		dt = Math.floor(dt / 16);
+	// 		return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+	// 	});
+	// 	return uuid;
+	// }
 
-
-
-	var connection = new WebSocket("ws://localhost:8080/DHBW-Vier-gewinnt/socket");
-
-
-	connection.onopen = function () {
-		//generate clientId
-		const clientId = create_UUID;
-
-		clients[clientId] = {
-			connection: connection
-		};
-		
-		const payLoad = {
+	function methodConnect() {
+		return {
 			method: "connect",
-			clientId: clientId
-		};
-
-		connection.send("Websocket open");
-		//send back the client connect
-		connection.send(JSON.stringify(this.payload));
-		console.log("message was sent");
-		alert("Connected");
+		}
 	}
 
-	connection.onerror = function (error) {
-		console.log("Websocket Error" + error);
+	function handleClientId(clientId) {
+		console.log("Client id " + clientId);
+		sessionStorage.setItem("clientId", clientId);
 	}
 
-	connection.onmessage = function (message) {
-		console.log("Server: " + message.data);
+	const clientId = sessionStorage.getItem("clientId");
+
+	if(clientId === null) {
+		var connection = new WebSocket("ws://localhost:8080/DHBW-Vier-gewinnt/socket");
+
+		// ... = (error) => foo(error);
+
+		connection.onopen = function () {
+			console.log("Websocket open");
+			const json = methodConnect();
+			const request = JSON.stringify(json);
+			connection.send(request);
+		}
+
+		connection.onmessage = function (message) {
+			const data = message.data;
+			console.log("Server: " + data);
+			const json = JSON.parse(data);
+			const method = json.method;
+
+			if (method === "connection established") {
+				console.log("connection established");
+				const clientId = json.clientId;
+				handleClientId(clientId);
+			} else {
+				console.log("Error: unknown method " + method);
+			}
+		}
+
+		connection.onerror = function (error) {
+			console.log("Websocket Error" + error);
+		}		
+	} else {
+		handleClientId(clientId);
 	}
-
-
-	/* function startGame(player) {
-		var msg = {
-				"type": "newGame",
-				"player": player
-		};
-		connection.send(JSON.stringify(msg));
-	};
-
-	function sendTurn(player) {
-		var msg = {
-				"type": "turn",
-				"player": player
-		};
-		connection.send(JSON.stringify(msg));
-	}; */
 </script>
 
 </html>
