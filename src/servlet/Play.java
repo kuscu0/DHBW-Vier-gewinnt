@@ -114,7 +114,7 @@ public class Play extends HttpServlet {
         c.newRound(false);
         c.setRefresh(session);
         roundType = RoundType.ONLINE;
-        new Match(session);
+        //new Match(session);
     }
 
     /**
