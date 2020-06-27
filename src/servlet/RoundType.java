@@ -1,6 +1,5 @@
 package servlet;
 
-public enum RoundType 
-{
-	BOT, LOCAL, ONLINE;
+public enum RoundType {
+    BOT, LOCAL, ONLINE;
 }

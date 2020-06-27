@@ -19,55 +19,52 @@ import bean.method.ConnectionEstablished;
 
 @ServerEndpoint("/socket")
 public class WebSocket {
-	// private static Set<Session> peers = new HashSet<>();
-	private static final Gson gson = new Gson();
-	private static final JsonParser parser = new JsonParser();
+    // private static Set<Session> peers = new HashSet<>();
+    private static final Gson gson = new Gson();
+    private static final JsonParser parser = new JsonParser();
 
-	@OnOpen
-	public void onOpen(Session session) throws IOException {
-		System.out.println("Session " + session.getId() + " has opened");
-	}
+    @OnOpen
+    public void onOpen(Session session) throws IOException {
+        System.out.println("Session " + session.getId() + " has opened");
+    }
 
-	@OnMessage
-	public void onMessage(String message, Session session) throws IOException, InterruptedException {
-		final JsonElement json = parser.parse(message);
-		
-		if(!json.isJsonObject()) {
-			error("not an object", json);
-			return;
-		}
-		
-		final JsonObject jsonObject = json.getAsJsonObject();
-		final JsonElement methodJson = jsonObject.get("method");
-		
-		if(methodJson == null || !methodJson.isJsonPrimitive()) {
-			error("method", methodJson);
-			return;
-		}
-		
-		final JsonPrimitive methodPrimitive = methodJson.getAsJsonPrimitive();
-		
-		if(!methodPrimitive.isString()) {
-			error("method", methodPrimitive);
-			return;
-		}
-		
-		final String method = methodPrimitive.getAsString();
-		final String response;
-		
-		switch(method) {
-		case "connect":
-			response = handleConnect();
-			break;
-		default:
-			error("method", method);
-			return;
-		}
-		
-		session.getBasicRemote().sendText(response);
-		
-		
-		
+    @OnMessage
+    public void onMessage(String message, Session session) throws IOException, InterruptedException {
+        final JsonElement json = parser.parse(message);
+
+        if (!json.isJsonObject()) {
+            error("not an object", json);
+            return;
+        }
+
+        final JsonObject jsonObject = json.getAsJsonObject();
+        final JsonElement methodJson = jsonObject.get("method");
+
+        if (methodJson == null || !methodJson.isJsonPrimitive()) {
+            error("method", methodJson);
+            return;
+        }
+
+        final JsonPrimitive methodPrimitive = methodJson.getAsJsonPrimitive();
+
+        if (!methodPrimitive.isString()) {
+            error("method", methodPrimitive);
+            return;
+        }
+
+        final String method = methodPrimitive.getAsString();
+        final String response;
+
+        switch (method) {
+        case "connect":
+            response = handleConnect();
+            break;
+        default:
+            error("method", method);
+            return;
+        }
+
+        session.getBasicRemote().sendText(response);
 
 //		// Print the client message for testing purposes
 //		System.out.println("Received: " + message);
@@ -103,20 +100,20 @@ public class WebSocket {
 //		default:
 //			System.out.println("Error no explicit type");
 //		}
-	}
-	
-	private String handleConnect() {
-		final String clientId = UUID.randomUUID().toString();
-		final ConnectionEstablished json = new ConnectionEstablished(clientId);
-		final String response = gson.toJson(json);
-		return response;
-	}
+    }
 
-	@OnClose
-	public void onClose(Session session) {
-		// peers.remove(session);
-		System.out.println("Session " + session.getId() + " has ended");
-	}
+    private String handleConnect() {
+        final String clientId = UUID.randomUUID().toString();
+        final ConnectionEstablished json = new ConnectionEstablished(clientId);
+        final String response = gson.toJson(json);
+        return response;
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+        // peers.remove(session);
+        System.out.println("Session " + session.getId() + " has ended");
+    }
 
 //	public void sendMesage(String message) throws IOException {
 //      peers.stream().forEach(peer -> peer.getBasicRemote().sendText(message));
@@ -124,8 +121,8 @@ public class WebSocket {
 //			peer.getBasicRemote().sendText(message);
 //		}1
 //	}
-	
-	private static void error(final String message, final Object json) {
-		System.out.println("Malformed request (" + message + "): " + json);
-	}
+
+    private static void error(final String message, final Object json) {
+        System.out.println("Malformed request (" + message + "): " + json);
+    }
 }
