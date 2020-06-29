@@ -11,4 +11,16 @@ public class TurnTaken {
         this.gameId = gameId;
         this.board = board;
     }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public Integer[][] getBoard() {
+        return board;
+    }
 }

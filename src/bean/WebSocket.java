@@ -64,9 +64,9 @@ public class WebSocket {
         case "new game":
             response = handleNewGame();
             break;
-        case "make turn":
-            response = handleTurn(jsonObject);
-            break;
+//        case "make turn":
+//            response = handleTurn(jsonObject);
+//            break;
         default:
             error("method", method);
             return;
@@ -89,17 +89,21 @@ public class WebSocket {
         return response;
     }
     
-    private String handleTurn(JsonObject jsonObject) {
-        final JsonElement gameIdJson = jsonObject.get("gameId");
-        if (gameIdJson == null || !gameIdJson.isJsonPrimitive()) {
-            error("method", gameIdJson);
-            return "";
-        }
-        
-        final TurnTaken json = null;//new TurnTaken(gameIdJson, );
-        final String response = gson.toJson(json);
-        return response;
-    }
+//    private String handleTurn(JsonObject jsonObject) {
+//        final JsonElement clientId = jsonObject.get("clientId");
+//        final JsonElement gameIdJson = jsonObject.get("gameId");
+//        final JsonElement boardJson = jsonObject.get("column");
+//        //TODO initialize new Board.
+//        
+//        if (gameIdJson == null || !gameIdJson.isJsonPrimitive()) {
+//            error("method", gameIdJson);
+//            return "";
+//        }
+//        
+//        final TurnTaken json = new TurnTaken(gameIdJson, );
+//        final String response = gson.toJson(json);
+//        return response;
+//    }
 
     @OnClose
     public void onClose(Session session) {
