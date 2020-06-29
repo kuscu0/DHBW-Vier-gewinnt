@@ -19,6 +19,17 @@ Creates a new game.
 ```
 The server responds with `game created`.
 
+### make turn
+User sends his turn to the server.
+```
+{
+	"method": "make turn",
+	"clientId": 1,
+	"gameId": 3,
+	"column": 2
+}
+```
+
 ## Server to client
 ### connection established
 Confirms that a new connection was established.
@@ -35,5 +46,15 @@ Confirms that a new game was created.
 {
 	"method": "game created",
 	"gameId": 2
+}
+```
+
+### turn taken
+Confirms turn and response with Board.
+```
+{
+	"method": "turn taken",
+	"gameId": 3,
+	"board": [1][1]
 }
 ```

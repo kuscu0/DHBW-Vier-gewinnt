@@ -19,7 +19,7 @@
 		<form action="play" method="post" style="display: flex; justify-content: space-evenly;">
 			<button class="button compBtn" name="playBtn">vs.</button>
 			<button class="button twoPlayersBtn" name="2playersBtn">vs.</button>
-			<button class="button onlineBtn" name="onlineBtn">vs.</button>
+			<a href="onlinegame.jsp" class="button onlineBtn" name="onlineBtn">vs.</a>
 			<button class="button helpBtn" id="helpBtn" name="helpBtn">?</button>
 			<span class="hiddenText1">Spieler gegen Computer</span> <span class="hiddenText2">2 Spieler</span> <span
 				class="hiddenText3">Online-Match</span>
@@ -43,52 +43,7 @@
 	// 	return uuid;
 	// }
 
-	function methodConnect() {
-		return {
-			method: "connect",
-		}
-	}
 
-	function handleClientId(clientId) {
-		console.log("Client id " + clientId);
-		sessionStorage.setItem("clientId", clientId);
-	}
-
-	const clientId = sessionStorage.getItem("clientId");
-
-	if(clientId === null) {
-		var connection = new WebSocket("ws://localhost:8080/DHBW-Vier-gewinnt/socket");
-
-		// ... = (error) => foo(error);
-
-		connection.onopen = function () {
-			console.log("Websocket open");
-			const json = methodConnect();
-			const request = JSON.stringify(json);
-			connection.send(request);
-		}
-
-		connection.onmessage = function (message) {
-			const data = message.data;
-			console.log("Server: " + data);
-			const json = JSON.parse(data);
-			const method = json.method;
-
-			if (method === "connection established") {
-				console.log("connection established");
-				const clientId = json.clientId;
-				handleClientId(clientId);
-			} else {
-				console.log("Error: unknown method " + method);
-			}
-		}
-
-		connection.onerror = function (error) {
-			console.log("Websocket Error" + error);
-		}		
-	} else {
-		handleClientId(clientId);
-	}
 </script>
 
 </html>

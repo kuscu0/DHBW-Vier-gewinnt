@@ -16,6 +16,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import bean.method.ConnectionEstablished;
+import bean.method.TurnTaken;
+import bean.method.NewGame;
 
 @ServerEndpoint("/socket")
 public class WebSocket {
@@ -59,52 +61,42 @@ public class WebSocket {
         case "connect":
             response = handleConnect();
             break;
+        case "new game":
+            response = handleNewGame();
+            break;
+        case "make turn":
+            response = handleTurn(jsonObject);
+            break;
         default:
             error("method", method);
             return;
         }
 
         session.getBasicRemote().sendText(response);
-
-//		// Print the client message for testing purposes
-//		System.out.println("Received: " + message);
-//
-//		// Send the first message to the client
-//		session.getBasicRemote().sendText("This is the first server message");
-//
-//		// Send 3 messages to the client every 5 seconds
-//		//int sentMessages = 0;
-//		while (peers.size() > 0) {
-//			Thread.sleep(5000);
-//			Service.broadcast(peers);
-//			//session.getBasicRemote().sendText("This is an intermediate server message. Count: " + sentMessages);
-//			//sentMessages++;
-//		}
-//
-//		// Send a final message to the client
-//		session.getBasicRemote().sendText("This is the last server message");
-
-//		//TODO Look for errors
-//		JsonParser parser = new JsonParser();
-//		JsonObject obj = parser.parse(message).getAsJsonObject();
-//		String type = obj.get("type").getAsString();
-//		
-
-//		switch(type) {
-//		case "newGame":
-//			System.out.println("new game was started");
-//			break;
-//		case "turn":
-//			System.out.println("turn was being made.");
-//			break;
-//		default:
-//			System.out.println("Error no explicit type");
-//		}
     }
 
     private String handleConnect() {
         final String clientId = UUID.randomUUID().toString();
         final ConnectionEstablished json = new ConnectionEstablished(clientId);
+        final String response = gson.toJson(json);
+        return response;
+    }
+    
+    private String handleNewGame() {
+        final String gameId = UUID.randomUUID().toString();
+        final NewGame json = new NewGame(gameId);
+        final String response = gson.toJson(json);
+        return response;
+    }
+    
+    private String handleTurn(JsonObject jsonObject) {
+        final JsonElement gameIdJson = jsonObject.get("gameId");
+        if (gameIdJson == null || !gameIdJson.isJsonPrimitive()) {
+            error("method", gameIdJson);
+            return "";
+        }
+        
+        final TurnTaken json = null;//new TurnTaken(gameIdJson, );
         final String response = gson.toJson(json);
         return response;
     }
@@ -114,13 +106,6 @@ public class WebSocket {
         // peers.remove(session);
         System.out.println("Session " + session.getId() + " has ended");
     }
-
-//	public void sendMesage(String message) throws IOException {
-//      peers.stream().forEach(peer -> peer.getBasicRemote().sendText(message));
-//		for (Session peer : peers) {
-//			peer.getBasicRemote().sendText(message);
-//		}1
-//	}
 
     private static void error(final String message, final Object json) {
         System.out.println("Malformed request (" + message + "): " + json);
