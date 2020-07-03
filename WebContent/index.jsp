@@ -16,7 +16,7 @@
 		<form action="play" method="post" style="display: flex; justify-content: space-evenly;">
 			<button class="button compBtn" name="playBtn">vs.</button>
 			<button class="button twoPlayersBtn" name="2playersBtn">vs.</button>
-			<button class="button onlineBtn" name="onlineBtn">vs.</button>
+			<a href="onlinegame.jsp" class="button onlineBtn" name="onlineBtn">vs.</a>
 			<button class="button helpBtn" id="helpBtn" name="helpBtn">?</button>
 			<span class="hiddenText1">Spieler gegen Computer</span>
 			<span class="hiddenText2">2 Spieler</span>

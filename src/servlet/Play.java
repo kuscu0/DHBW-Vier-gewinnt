@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -36,7 +37,7 @@ public class Play extends HttpServlet
      * @param sessionID The ID of the existing Session ID, which you want to join (For Online Player mostly)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response, String sessionID) throws ServletException, IOException
-    {	
+    {	        
         HttpSession session = getSession(request, sessionID);
         PrintWriter out = response.getWriter();
         /*

@@ -1,6 +1,5 @@
 package bean;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpSession;
@@ -13,9 +12,8 @@ import servlet.RoundType;
  * @author pascalsimon
  *
  */
-public class Control implements Serializable
+public class Control
 {
-	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 7;
 	private static final int HEIGHT = 6;
 		
