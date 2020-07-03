@@ -8,7 +8,7 @@ public class User {
 
     public User(Session session, String id) {
         this.session = session;
-        this.id = id;
+        this.setId(id);
     }
 
     public Session getSession() {
@@ -17,6 +17,14 @@ public class User {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

@@ -9,18 +9,18 @@ function createTable(tablaData, parentNode) {
     
     var tRow = document.createElement("tr");
     for (i = 0; i < 7; i++) {
-        var tField = document.createElement("th")
+        var tField = document.createElement("th");
         var form = document.createElement("form");
         form.action = "play";
         form.method = "post";
-        var btn = document.createElement("button")
+        var btn = document.createElement("button");
         btn.className = ("arrow-down");
-        btn.id = ("btn_spalte_" + i)
-        btn.name = ("insertBtn")
-        btn.value = i
+        btn.id = ("btn_spalte_" + i);
+        btn.name = ("insertBtn");
+        btn.value = i;
         form.appendChild(btn);
         tField.appendChild(form);
-        tRow.appendChild(tField)
+        tRow.appendChild(tField);
     }
     table.appendChild(tRow);
     var img;
@@ -28,9 +28,9 @@ function createTable(tablaData, parentNode) {
         tRow = document.createElement("tr");
 
         for (j = 0; j < 7; j++) {
-            tField = document.createElement("td")
-            img = document.createElement("img")
-            img.setAttribute("src", getSource(tablaData[i][j]))
+            tField = document.createElement("td");
+            img = document.createElement("img");
+            img.setAttribute("src", getSource(tablaData[i][j]));
             img.setAttribute("style", "margin: 10px;");
             tField.appendChild(img);
             tRow.appendChild(tField);
