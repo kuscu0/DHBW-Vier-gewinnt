@@ -41,15 +41,6 @@
 		}
 	};
 
-	function methodMakeTurn(column) {
-		return {
-			method: "make turn",
-			clientId: sessionStorage.getItem("clientId"),
-			gameId: sessionStorage.getItem("gameId"),
-			column: column
-		}
-	};
-
 	function methodJoinGame(gameId) {
 		return {
 			method: "join game",
@@ -108,25 +99,17 @@
 
 		if (method === "game starting") {
 			console.log("game starting");
-			const board = json.board;
+			console.log(json)
+			const board = JSON.stringify(json.board);
+			
 			const gameId = json.gameId;
 			sessionStorage.setItem("gameId", gameId);
 			sessionStorage.setItem("board", board);
 
-			 document.getElementById("game").innerHTML = "<a id=\"start\" href=\"game.jsp\">Start Game</a>"
-			 document.getElementById("start").click();
+			document.getElementById("game").innerHTML = "<a class=\"button onlineBtn\" id=\"start\" href=\"game.jsp\">Start Game</a>"
+			document.getElementById("start").click();
 			return;
 		};
-
-		if (method == "turn taken") {
-			console.log("turn taken")
-			const board = json.board;
-
-			abstractCreateTable(board, document.getElementById("gameCanvas"), null, (column) => {
-				makeTurn(column);
-				console.log("aCCCCCtion" + column);
-			});
-		}
 
 		if (method === "error") {
 			const errorMessage = json.errorMessage;
@@ -158,13 +141,6 @@
 		sessionStorage.setItem("gameId", gameId)
 		console.log(gameId);
 		const json = methodJoinGame(gameId);
-		const request = JSON.stringify(json);
-		connection.send(request);
-	};
-
-	function makeTurn(column) {
-		console.log("make turn");
-		const json = methodMakeTurn(column);
 		const request = JSON.stringify(json);
 		connection.send(request);
 	};

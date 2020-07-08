@@ -3,7 +3,7 @@ package bean;
 import javax.websocket.Session;
 
 public class User {
-    private final Session session;
+    private Session session;
     private final String id;
     private int color = 0;
 
@@ -14,6 +14,10 @@ public class User {
 
     public Session getSession() {
         return session;
+    }
+    
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public String getId() {

@@ -3,9 +3,8 @@ package bean;
 import java.io.IOException;
 import java.util.*;
 
-import javax.websocket.Session;
-
 import bean.method.ErrorJson;
+import bean.method.GameWon;
 import bean.method.TurnTaken;
 import servlet.RoundType;
 
@@ -14,15 +13,18 @@ public class Match {
     private final int WHITE = 0;
     private final int RED = 1;
     private final int YELLOW = 2;
-    private final int lastChipSet = 0;
+    private int lastChipSet = 0;
     private int[][] board = new int[6][7];
     private final String gameId;
     private final Control c = new Control();
+    public boolean gameWon = false;
+    
 
     public Match(User user, String gameId) {
         this.gameId = gameId;
 
         user.setColor(RED);
+        
         players.add(user);
 
         for (int column = 0; column < 7; column++) {
@@ -31,16 +33,24 @@ public class Match {
             }
         }
     }
+    
+    public void player2isJoining(User user) {
+        user.setColor(YELLOW);
+        players.add(user);
+    }
 
     public String messagePartner(final String clientId, final String message) {
+        System.out.println("§send message was called");
         boolean succes = false;
         // sends the message to the other player;
         for (User secondPlayer : getPlayers()) {
             if (!secondPlayer.getId().equals(clientId)) {
                 succes = true;
-                
+
                 try {
+                    System.out.println("tried to send message");
                     secondPlayer.getSession().getBasicRemote().sendText(message);
+                    System.out.println("after triying");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     final ErrorJson errorJson = new ErrorJson("second Player couldnt get messsage");
@@ -52,13 +62,13 @@ public class Match {
                 continue;
             }
         }
-        
-        if(!succes) {
+
+        if (!succes) {
             final ErrorJson errorJson = new ErrorJson("Other User Not Found.");
             final String error = WebSocket.gson.toJson(errorJson);
             return error;
         }
-        
+
         return message;
     }
 
@@ -71,27 +81,100 @@ public class Match {
     }
 
     public String setChip(final int column, final int color) {
-        if(lastChipSet == color) {
+        if (lastChipSet == color) {
             final ErrorJson errorJson = new ErrorJson("The same player can't make 2 turns in a row");
             final String error = WebSocket.gson.toJson(errorJson);
             return error;
         }
-        
-        for (int row = 0; row < 6; row++) {
+
+        for (int row = 5; row >= 0; row--) {
             if (board[row][column] == RED || board[row][column] == YELLOW) {
-                if (row == 5) {
+                if (row == 0) {
                     final ErrorJson errorJson = new ErrorJson("The column is full");
                     final String error = WebSocket.gson.toJson(errorJson);
                     return error;
                 }
-                board[row + 1][column] = color;
-                break;
+                
+                if(board[row + 1][column] == 0) {
+                    board[row + 1][column] = color;
+                    break;
+                } else {
+                    continue;
+                }
             }
         }
         
+        if(board[5][column] == 0) {
+            board[5][column] = color;
+        }
+
+        if(checkWin(board)) {
+            final GameWon json = new GameWon(gameId);
+            final String response = WebSocket.gson.toJson(json);
+            return response;
+        }
+        
+        System.out.println("Turn was taken");
+
+        lastChipSet = color;
         final TurnTaken json = new TurnTaken(gameId, board);
         final String response = WebSocket.gson.toJson(json);
         return response;
+    }
+
+    public boolean checkWin(int[][] board) {
+        if(checkVertical(board) || checkHorizontal(board) || checkDiagonal(board)) {
+            gameWon = true;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkVertical(int[][] board) {
+        for (int col = 0; col < 7; col++) {
+            for (int row = 0; row < 3; row++) {
+                if (board[row][col] != 0) {
+                    int color = board[row][col];
+
+                    if (board[row + 1][col] == color && board[row + 2][col] == color && board[row + 3][col] == color) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkHorizontal(int[][] board) {
+        for (int col = 0; col < 4; col++) {
+            for (int row = 0; row < 6; row++) {
+                if (board[row][col] != 0) {
+                    int color = board[row][col];
+                    
+                    if(board[row][col + 1] == color && board[row][col + 2] == color && board[row][col + 3] == color) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkDiagonal(int[][] board) {
+        for (int col = 0; col < 7; col++) {
+            for (int row = 0; row < 3; row++) {
+                if (board[row][col] != 0) {
+                    int color = board[row][col];
+                    
+                    if(col < 4 && board[row + 1][col + 1] == color && board[row + 2][col + 2] == color && board[row + 3][col + 3] == color) {
+                        return true;
+                    } else if(col > 2 && board[row + 1][col - 1] == color && board[row + 2][col - 2] == color && board[row + 3][col - 3] == color) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public int[][] getFieldWithNewestChip() {

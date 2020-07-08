@@ -23,6 +23,7 @@ import com.google.gson.JsonPrimitive;
 
 import bean.method.ConnectionEstablished;
 import bean.method.ErrorJson;
+import bean.method.GameLost;
 import bean.method.GameStarted;
 import bean.method.TurnTaken;
 import servlet.Constants;
@@ -58,6 +59,9 @@ public class WebSocket {
         case "connect":
             response = handleConnect(session);
             break;
+        case "connect game":
+            response = handleConnectGame(session, jsonObject);
+            break;
         case "new game":
             final JsonElement clientIdJson = jsonObject.get("clientId");
             final String clientId = parseJsonElementToString(clientIdJson);
@@ -69,7 +73,7 @@ public class WebSocket {
             response = handleJoinGame(jsonObject);
             break;
         case "make turn":
-            response = handleTurn(jsonObject);
+            response = handleTurn(jsonObject, session);
             break;
         default:
             error("method", method);
@@ -91,6 +95,19 @@ public class WebSocket {
         final Game game = Game.getInstance();
         game.addUser(user);
 
+        final ConnectionEstablished json = new ConnectionEstablished(clientId);
+        final String response = gson.toJson(json);
+        return response;
+    }
+    
+    private String handleConnectGame(Session session, JsonObject jsonObject) {
+        final JsonElement clientIdJson = jsonObject.get("clientId");
+        
+        final String clientId = parseJsonElementToString(clientIdJson);
+        
+        final Game game = Game.getInstance();
+        game.getUser(clientId).setSession(session);
+        
         final ConnectionEstablished json = new ConnectionEstablished(clientId);
         final String response = gson.toJson(json);
         return response;
@@ -149,7 +166,7 @@ public class WebSocket {
             final String error = gson.toJson(errorJson);
             return error;
         }
-        match.addPlayer(user);
+        match.player2isJoining(user);
 
         final int[][] board = match.getFieldWithNewestChip();
         final GameStarted json = new GameStarted(clientId, gameId, board);
@@ -158,7 +175,7 @@ public class WebSocket {
         return match.messagePartner(clientId, response);
     }
 
-    private String handleTurn(JsonObject jsonObject) {
+    private String handleTurn(JsonObject jsonObject, Session session) {
         System.out.println("handleTurn was called");
         final JsonElement clientIdJson = jsonObject.get("clientId");
         final JsonElement gameIdJson = jsonObject.get("gameId");
@@ -168,15 +185,20 @@ public class WebSocket {
         String gameId = parseJsonElementToString(gameIdJson);
         int column = parseJsonElementToInt(columnJson);
         
+        System.out.println("Nach dem parse");
+        
         if(column == -1) {
             final ErrorJson errorJson = new ErrorJson("column doesn't exist.");
             final String error = gson.toJson(errorJson);
             return error;
         }
         
+        System.out.println("nach if");
+        
         final Game game = Game.getInstance();
         final Match match = game.getMatch(gameId);
         final User user = game.getUser(clientId);
+        user.setSession(session);
         
         if(match == null) {
             System.out.println("Match not found.");
@@ -185,7 +207,16 @@ public class WebSocket {
             return error;
         }
         
-        String response = match.setChip(column, user.getColor());         
+        String response = match.setChip(column, user.getColor());
+        
+        if(match.gameWon) {
+            final GameLost gameLostJson = new GameLost(gameId);
+            final String json = gson.toJson(gameLostJson);
+            
+            match.messagePartner(clientId, json);
+            return response;
+        }
+        
         return match.messagePartner(clientId, response); 
     }
     

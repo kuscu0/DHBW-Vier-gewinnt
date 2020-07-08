@@ -39,8 +39,8 @@ function abstractCreateTable(tablaData, parentNode, action, onclick) {
 		form.action = action;
 		form.method = "post";
 		var btn = document.createElement("button");
-		//const btnid = i;
-		btn.onclick = (event) => onclick(btnid);
+		const btnid = i;
+		btn.onclick = () => onclick(btnid);
 		btn.className = ("arrow-down");
 		btn.id = ("btn_spalte_" + i)
 		btn.name = ("insertBtn");
@@ -146,7 +146,7 @@ function removeButton(id) {
 };
 
 function disableButton(element) {
-	element.setAttribute("style", "border-top: 20px solid gray; cursor: not-allowed;");
+	element.setAttribute("style", "border-top: 20px solid gray;");
 	element.disabled = true;
 };
 
