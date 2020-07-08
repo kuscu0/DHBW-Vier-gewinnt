@@ -21,9 +21,8 @@
 		<button name="join game" onclick="joinGame()">Spiel beitreten</button><br><br>
 		<button name="turn" onclick="makeTurn(1)">test make turn</button>
 	</div>
-	<div id="gameCanvas"></div>
-	<button class="backBtn" onclick="location.href = 'index.jsp';">Zum HauptmenÃ¼</button>
-	<script src="js/display.js"></script>
+	<button class="backBtn" onclick="location.href = 'index.jsp';">Zum Hauptmenü¼</button>
+	<div id="game"></div>
 </body>
 <script type="text/javascript">
 	const gameId = sessionStorage.getItem("gameId");
@@ -55,7 +54,7 @@
 		return {
 			method: "join game",
 			clientId: sessionStorage.getItem("clientId"),
-			gameId: gameId
+			gameId: sessionStorage.getItem("gameId")
 		}
 	};
 
@@ -110,14 +109,24 @@
 		if (method === "game starting") {
 			console.log("game starting");
 			const board = json.board;
+			const gameId = json.gameId;
+			sessionStorage.setItem("gameId", gameId);
+			sessionStorage.setItem("board", board);
 
-			abstractCreateTable(board, document.getElementById("gameCanvas"), null, (column) => {
-				event.preventDefault();
-				console.log("AAAACCTCTOIIONNN" + column);
-			});
-
+			 document.getElementById("game").innerHTML = "<a id=\"start\" href=\"game.jsp\">Start Game</a>"
+			 document.getElementById("start").click();
 			return;
 		};
+
+		if (method == "turn taken") {
+			console.log("turn taken")
+			const board = json.board;
+
+			abstractCreateTable(board, document.getElementById("gameCanvas"), null, (column) => {
+				makeTurn(column);
+				console.log("aCCCCCtion" + column);
+			});
+		}
 
 		if (method === "error") {
 			const errorMessage = json.errorMessage;
@@ -134,9 +143,7 @@
 
 	connection.onclose = function (event) {
 		console.log("Connection closed");
-		sessionStorage.clear();
 	};
-
 
 	function newGame() {
 		console.log("create new game");
@@ -148,6 +155,7 @@
 	function joinGame() {
 		console.log("join game");
 		const gameId = document.getElementById("join").value;
+		sessionStorage.setItem("gameId", gameId)
 		console.log(gameId);
 		const json = methodJoinGame(gameId);
 		const request = JSON.stringify(json);

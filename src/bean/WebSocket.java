@@ -31,8 +31,8 @@ import bean.method.NewGame;
 
 @ServerEndpoint("/socket")
 public class WebSocket {
-    private static final Gson gson = new Gson();
-    private static final JsonParser parser = new JsonParser();
+    static final Gson gson = new Gson();
+    static final JsonParser parser = new JsonParser();
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
@@ -53,7 +53,7 @@ public class WebSocket {
 
         final String method = parseJsonElementToString(methodJson);
         String response;
-        
+
         switch (method) {
         case "connect":
             response = handleConnect(session);
@@ -64,22 +64,13 @@ public class WebSocket {
 
             response = handleNewGame(clientId);
             break;
-        case "join game":   
+        case "join game":
             System.out.println("join game method");
-            final JsonElement playerTwoClientIdJson = jsonObject.get("clientId");
-            final JsonElement gameIdJson = jsonObject.get("gameId");
-            
-            final String gameId = parseJsonElementToString(gameIdJson);
-            final String playerTwoClientId = parseJsonElementToString(playerTwoClientIdJson);
-
-            response = handleJoinGame(playerTwoClientId, gameId);
+            response = handleJoinGame(jsonObject);
             break;
-        //case "start game":
-            //response = handleGameStart(session);
-           // break;
-//        case "make turn":
-//            response = handleTurn(jsonObject);
-//            break;
+        case "make turn":
+            response = handleTurn(jsonObject);
+            break;
         default:
             error("method", method);
             return;
@@ -125,76 +116,96 @@ public class WebSocket {
         final String response = gson.toJson(json);
         return response;
     }
-    
-    private String handleJoinGame(String clientId, String gameId) throws IOException {
+
+    private String handleJoinGame(JsonObject jsonObject) throws IOException {
+        final JsonElement clientIdJson = jsonObject.get("clientId");
+        final JsonElement gameIdJson = jsonObject.get("gameId");
+
+        final String gameId = parseJsonElementToString(gameIdJson);
+        final String clientId = parseJsonElementToString(clientIdJson);
+        
         System.out.println("handleJoinGame was called");
         final Game game = Game.getInstance();
         final Match match = game.getMatch(gameId);
         final User user = game.getUser(clientId);
 
-
-        if (match != null) {
-            for (User myUser : match.getPlayers()) {
-                if (myUser.getId().equals(clientId)) {
-                    final ErrorJson errorJson = new ErrorJson("Player already joined.");
-          
-                    
-                    final String error = gson.toJson(errorJson);
-                    return error;
-                }
-            }
-
-
-            if (match.getPlayers().size() >= 2) {
-                System.out.println("Max Player size reached.");
-                final ErrorJson errorJson = new ErrorJson("Max players reached.");
-                final String error = gson.toJson(errorJson);
-                return error;
-            }
-            match.addPlayer(user);
-            
-        } else { //if match == null it print match not found
+        if (match == null) {
             System.out.println("Match not found.");
             final ErrorJson errorJson = new ErrorJson("Match not found.");
             final String error = gson.toJson(errorJson);
             return error;
         }
 
-        // TODO control in match
-        final Control c = new Control();
-        final int[][] board = c.getFieldWithNewestChip();
-        final GameStarted json = new GameStarted(clientId, gameId, board);
-        final String response = gson.toJson(json);
-        
-        //sends the message to the other player;
-        for (User secondPlayer : match.getPlayers()) {
-            if (secondPlayer.getId() != clientId) { 
-               secondPlayer.getSession().getBasicRemote().sendText(response);
-               break;
-            } else {
-                final ErrorJson errorJson = new ErrorJson("Other User Not Found.");
+        for (User myUser : match.getPlayers()) {
+            if (myUser.getId().equals(clientId)) {
+                final ErrorJson errorJson = new ErrorJson("Player already joined.");
                 final String error = gson.toJson(errorJson);
                 return error;
             }
-
         }
-        return response;
+
+        if (match.getPlayers().size() >= 2) {
+            final ErrorJson errorJson = new ErrorJson("Max players reached.");
+            final String error = gson.toJson(errorJson);
+            return error;
+        }
+        match.addPlayer(user);
+
+        final int[][] board = match.getFieldWithNewestChip();
+        final GameStarted json = new GameStarted(clientId, gameId, board);
+        final String response = gson.toJson(json);
+
+        return match.messagePartner(clientId, response);
     }
 
-//    private String handleTurn(JsonObject jsonObject) {
-//        final JsonElement clientId = jsonObject.get("clientId");
-//        final JsonElement gameIdJson = jsonObject.get("gameId");
-//        final JsonElement boardJson = jsonObject.get("column");
-//        
-//        if (gameIdJson == null || !gameIdJson.isJsonPrimitive()) {
-//            error("method", gameIdJson);
-//            return "";
-//        }
-//        
-//        final TurnTaken json = new TurnTaken(gameIdJson, );
-//        final String response = gson.toJson(json);
-//        return response;
-//    }
+    private String handleTurn(JsonObject jsonObject) {
+        System.out.println("handleTurn was called");
+        final JsonElement clientIdJson = jsonObject.get("clientId");
+        final JsonElement gameIdJson = jsonObject.get("gameId");
+        final JsonElement columnJson = jsonObject.get("column");
+        
+        String clientId = parseJsonElementToString(clientIdJson);
+        String gameId = parseJsonElementToString(gameIdJson);
+        int column = parseJsonElementToInt(columnJson);
+        
+        if(column == -1) {
+            final ErrorJson errorJson = new ErrorJson("column doesn't exist.");
+            final String error = gson.toJson(errorJson);
+            return error;
+        }
+        
+        final Game game = Game.getInstance();
+        final Match match = game.getMatch(gameId);
+        final User user = game.getUser(clientId);
+        
+        if(match == null) {
+            System.out.println("Match not found.");
+            final ErrorJson errorJson = new ErrorJson("Match not found.");
+            final String error = gson.toJson(errorJson);
+            return error;
+        }
+        
+        String response = match.setChip(column, user.getColor());         
+        return match.messagePartner(clientId, response); 
+    }
+    
+    private int parseJsonElementToInt(JsonElement element) {
+        if (element == null || !element.isJsonPrimitive()) {
+            error("method", element);
+            return -1;
+        }
+
+        final JsonPrimitive jsonPrimitive = element.getAsJsonPrimitive();
+
+        if (!jsonPrimitive.isNumber()) {
+            error("method", jsonPrimitive);
+            return -1;
+        }
+
+        final int json = jsonPrimitive.getAsNumber().intValue();
+        System.out.println(json + "parse Element");
+        return json;
+    }
 
     private String parseJsonElementToString(JsonElement element) {
         if (element == null || !element.isJsonPrimitive()) {

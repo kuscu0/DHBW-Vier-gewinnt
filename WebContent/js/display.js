@@ -19,10 +19,6 @@ function printSign(x) {
 	onSign(x, onNegative, onPositive);
 };
 
-
-
-
-
 function removeAllChildNodes(parentNode) {
 	while (parentNode.firstChild) {
 		parentNode.removeChild(parentNode.firstChild);
@@ -43,7 +39,7 @@ function abstractCreateTable(tablaData, parentNode, action, onclick) {
 		form.action = action;
 		form.method = "post";
 		var btn = document.createElement("button");
-		const btnid = i;
+		//const btnid = i;
 		btn.onclick = (event) => onclick(btnid);
 		btn.className = ("arrow-down");
 		btn.id = ("btn_spalte_" + i)

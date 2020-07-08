@@ -5,9 +5,9 @@ public class TurnTaken {
 
     private final String method = METHOD;
     private final String gameId;
-    private final Integer[][] board;
+    private final int[][] board;
     
-    public TurnTaken(final String gameId, final Integer[][] board) {
+    public TurnTaken(final String gameId, final int[][] board) {
         this.gameId = gameId;
         this.board = board;
     }
@@ -20,7 +20,7 @@ public class TurnTaken {
         return gameId;
     }
 
-    public Integer[][] getBoard() {
+    public int[][] getBoard() {
         return board;
     }
 }

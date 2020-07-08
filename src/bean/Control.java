@@ -162,7 +162,7 @@ public class Control
 	/**
 	 * Sets the filed on default.
 	 */
-	private void clearField()
+	public void clearField()
 	{
 		for(int y = 0; y < HEIGHT; y++)
 		{
@@ -191,7 +191,7 @@ public class Control
 	 * @param chip Chipcolor of Player
 	 * @return If the Player with this Chip Won on the given Position.
 	 */
-	private boolean checkGewonnen(int x, int y, int chip)
+	public boolean checkGewonnen(int x, int y, int chip)
 	{
 		boolean finished = checkInARow(x, y, chip, 4);
 		
@@ -208,7 +208,7 @@ public class Control
 	 * @param length The length of chips in a Row, after which should be checked
 	 * @return If there is a row with the given length
 	 */
-	private boolean checkInARow(int x, int y, int chip, int length)
+	public boolean checkInARow(int x, int y, int chip, int length)
 	{
 		return checkInARowWithOffset(x, y, chip, length, 0);
 	}
@@ -222,7 +222,7 @@ public class Control
 	 * @param offset An offset added to the real length of the row.
 	 * @return If there is a Row with the given length and a offset.
 	 */
-	private boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset)
+	public boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset)
 	{
 		if (!(0 <= y && y < HEIGHT) || !(0 <= x && x < WIDTH)) return false;
 		
@@ -242,7 +242,7 @@ public class Control
 	 * @param offset An offset added to the real length of the row.
 	 * @return If there is a Horizontal Row with the given length and a offset.
 	 */
-	private boolean checkHorizontal(int x, int y, int chip, int length, int offset)
+	public boolean checkHorizontal(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
 		for (int i = -1 * (length - 1); i < length; i++)
@@ -266,7 +266,7 @@ public class Control
 	 * @param offset An offset added to the real length of the row.
 	 * @return If there is a Vertical Row with the given length and a offset.
 	 */
-	private boolean checkVertical(int x, int y, int chip, int length, int offset)
+	public boolean checkVertical(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
 		if (y <= HEIGHT - length)
@@ -288,7 +288,7 @@ public class Control
 	 * @param offset An offset added to the real length of the row.
 	 * @return If there is a Diagonal Row with the given length and a offset.
 	 */
-	private boolean checkSidewaysRight(int x, int y, int chip, int length, int offset)
+	public boolean checkSidewaysRight(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
 		for (int i = -1 * (length - 1); i < length; i++)
@@ -314,7 +314,7 @@ public class Control
 	 * @param offset An offset added to the real length of the row.
 	 * @return If there is a Diagonal Row with the given length and a offset.
 	 */
-	private boolean checkSidewaysLeft(int x, int y, int chip, int length, int offset)
+	public boolean checkSidewaysLeft(int x, int y, int chip, int length, int offset)
 	{
 		int line = offset;
 		for (int i = -1 * (length - 1); i < length; i++)
