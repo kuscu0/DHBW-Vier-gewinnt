@@ -1,5 +1,11 @@
 package bean.method;
 
+/**
+ * The json class for a error that has occurred.
+ * 
+ * @author Fabian Dittebrand.
+ *
+ */
 public class ErrorJson {
     private static final String METHOD = "error";
 

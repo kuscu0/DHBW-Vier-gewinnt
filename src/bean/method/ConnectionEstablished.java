@@ -1,5 +1,11 @@
 package bean.method;
 
+/**
+ * The json class for a new connection.
+ * 
+ * @author Fabian Dittebrand
+ *
+ */
 public class ConnectionEstablished {
     private static final String METHOD = "connection established";
 

@@ -6,7 +6,7 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 	<link rel="shortcut icon" href="favicon.ico" />
 	<title>Vier gewinnt</title>
 </head>
@@ -19,9 +19,8 @@
 		<label style="color: white;">Spiele Id eingeben:</label>
 		<input type="text" placeholder="Spiel-Id" id="join" name="join id text">
 		<button name="join game" onclick="joinGame()">Spiel beitreten</button><br><br>
-		<button name="turn" onclick="makeTurn(1)">test make turn</button>
 	</div>
-	<button class="backBtn" onclick="location.href = 'index.jsp';">Zum Hauptmenü¼</button>
+	<button class="backBtn" onclick="location.href = 'index.jsp';">Zum Hauptmenü</button>
 	<div id="game"></div>
 </body>
 <script type="text/javascript">
@@ -55,7 +54,6 @@
 		}
 	}
 
-	//TODO see if client can reconnect to websocket.
 	function handleClientId(clientId) {
 		console.log("Client id " + clientId);
 		sessionStorage.setItem("clientId", clientId);
@@ -106,7 +104,7 @@
 			sessionStorage.setItem("gameId", gameId);
 			sessionStorage.setItem("board", board);
 
-			document.getElementById("game").innerHTML = "<a class=\"button onlineBtn\" id=\"start\" href=\"game.jsp\">Start Game</a>"
+			document.getElementById("game").innerHTML = "<a id=\"start\" href=\"game.jsp\">Start Game</a>"
 			document.getElementById("start").click();
 			return;
 		};

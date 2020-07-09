@@ -1,5 +1,11 @@
 package bean.method;
 
+/**
+ * The json class for a lost game.
+ * 
+ * @author Fabian Dittebrand
+ *
+ */
 public class GameLost {
     private static final String METHOD = "game lost";
 

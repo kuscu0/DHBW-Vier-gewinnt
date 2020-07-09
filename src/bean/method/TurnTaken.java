@@ -1,5 +1,12 @@
 package bean.method;
 
+/**
+ * The json class for a turn that the player made is being returned with the
+ * corresponding new board.
+ * 
+ * @author Fabian Dittebrand
+ *
+ */
 public class TurnTaken {
     private static final String METHOD = "turn taken";
 

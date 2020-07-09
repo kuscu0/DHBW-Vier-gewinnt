@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.util.*;
 
 import bean.method.ErrorJson;
-import bean.method.GameWon;
 import bean.method.TurnTaken;
-import servlet.RoundType;
 
+/**
+ * The Match class represents a created match.
+ * 
+ * @author Fabian Dittebrand
+ *
+ */
 public class Match {
     private final Set<User> players = new HashSet<>();
     private final int WHITE = 0;
@@ -17,14 +21,18 @@ public class Match {
     private int[][] board = new int[6][7];
     private final String gameId;
     private final Control c = new Control();
-    public boolean gameWon = false;
-    
+    private boolean gameWon = false;
 
+    /**
+     * The Match is created with a User so players can't be empty. A game id has to be given.
+     * @param user
+     * @param gameId
+     */
     public Match(User user, String gameId) {
         this.gameId = gameId;
 
         user.setColor(RED);
-        
+
         players.add(user);
 
         for (int column = 0; column < 7; column++) {
@@ -33,14 +41,27 @@ public class Match {
             }
         }
     }
-    
+
+    /**
+     * Adds a user to the match.
+     * 
+     * @param user
+     */
     public void player2isJoining(User user) {
         user.setColor(YELLOW);
         players.add(user);
     }
 
+    /**
+     * Messages the other player of the given client id. Returns message, if both
+     * should get the same message it can be returned at the end of a method.
+     * 
+     * @param clientId
+     * @param message
+     * @return message or error.
+     */
     public String messagePartner(final String clientId, final String message) {
-        System.out.println("§send message was called");
+        System.out.println("send message was called");
         boolean succes = false;
         // sends the message to the other player;
         for (User secondPlayer : getPlayers()) {
@@ -72,14 +93,14 @@ public class Match {
         return message;
     }
 
-    public void newRound(final RoundType roundType) {
-        c.newRound(roundType);
-    }
-
-    public void nextRound() {
-        c.nextRound();
-    }
-
+    /**
+     * Sets the chip into the board by the given column. Saves the last turn by
+     * saving the color of the player in lastChipSet.
+     * 
+     * @param column
+     * @param color
+     * @return Json TurnTaken.
+     */
     public String setChip(final int column, final int color) {
         if (lastChipSet == color) {
             final ErrorJson errorJson = new ErrorJson("The same player can't make 2 turns in a row");
@@ -88,33 +109,28 @@ public class Match {
         }
 
         for (int row = 5; row >= 0; row--) {
+            if (row == 5) {
+                if (board[row][column] == 0) {
+                    board[row][column] = color;
+                    break;
+                }
+            }
+
             if (board[row][column] == RED || board[row][column] == YELLOW) {
                 if (row == 0) {
                     final ErrorJson errorJson = new ErrorJson("The column is full");
                     final String error = WebSocket.gson.toJson(errorJson);
                     return error;
                 }
-                
-                if(board[row + 1][column] == 0) {
-                    board[row + 1][column] = color;
+
+                if (board[row - 1][column] == 0) {
+                    board[row - 1][column] = color;
                     break;
-                } else {
-                    continue;
                 }
             }
         }
-        
-        if(board[5][column] == 0) {
-            board[5][column] = color;
-        }
 
-        if(checkWin(board)) {
-            final GameWon json = new GameWon(gameId);
-            final String response = WebSocket.gson.toJson(json);
-            return response;
-        }
-        
-        System.out.println("Turn was taken");
+        checkWin(board);
 
         lastChipSet = color;
         final TurnTaken json = new TurnTaken(gameId, board);
@@ -122,14 +138,28 @@ public class Match {
         return response;
     }
 
+    /**
+     * Checks if the game has been won and returns true or false; If the game is
+     * won, the gameWon variable is set to true.
+     * 
+     * @param board
+     * @return true or false
+     */
     public boolean checkWin(int[][] board) {
-        if(checkVertical(board) || checkHorizontal(board) || checkDiagonal(board)) {
+        if (checkVertical(board) || checkHorizontal(board) || checkDiagonal(board)) {
             gameWon = true;
             return true;
         }
         return false;
     }
 
+    /**
+     * Checks if the match has been won by 4 vertical touching chips of the same
+     * color.
+     * 
+     * @param board
+     * @return
+     */
     private boolean checkVertical(int[][] board) {
         for (int col = 0; col < 7; col++) {
             for (int row = 0; row < 3; row++) {
@@ -145,13 +175,20 @@ public class Match {
         return false;
     }
 
+    /**
+     * Checks if the match has been won by 4 horizontal touching chips of the same
+     * color.
+     * 
+     * @param board
+     * @return
+     */
     private boolean checkHorizontal(int[][] board) {
         for (int col = 0; col < 4; col++) {
             for (int row = 0; row < 6; row++) {
                 if (board[row][col] != 0) {
                     int color = board[row][col];
-                    
-                    if(board[row][col + 1] == color && board[row][col + 2] == color && board[row][col + 3] == color) {
+
+                    if (board[row][col + 1] == color && board[row][col + 2] == color && board[row][col + 3] == color) {
                         return true;
                     }
                 }
@@ -160,15 +197,24 @@ public class Match {
         return false;
     }
 
+    /**
+     * Checks if the match has been won by 4 diagonal touching chips of the same
+     * color.
+     * 
+     * @param board
+     * @return
+     */
     private boolean checkDiagonal(int[][] board) {
         for (int col = 0; col < 7; col++) {
             for (int row = 0; row < 3; row++) {
                 if (board[row][col] != 0) {
                     int color = board[row][col];
-                    
-                    if(col < 4 && board[row + 1][col + 1] == color && board[row + 2][col + 2] == color && board[row + 3][col + 3] == color) {
+
+                    if (col < 4 && board[row + 1][col + 1] == color && board[row + 2][col + 2] == color
+                            && board[row + 3][col + 3] == color) {
                         return true;
-                    } else if(col > 2 && board[row + 1][col - 1] == color && board[row + 2][col - 2] == color && board[row + 3][col - 3] == color) {
+                    } else if (col > 2 && board[row + 1][col - 1] == color && board[row + 2][col - 2] == color
+                            && board[row + 3][col - 3] == color) {
                         return true;
                     }
                 }
@@ -177,56 +223,12 @@ public class Match {
         return false;
     }
 
+    /**
+     * Gets the board.
+     * @return board array
+     */
     public int[][] getFieldWithNewestChip() {
         return c.getFieldWithNewestChip();
-    }
-
-    public int getPlayerWon() {
-        return c.getPlayerWon();
-    }
-
-    public RoundType getRoundType() {
-        return c.getRoundType();
-    }
-
-    public String getPlayerWonToString() {
-        return c.getPlayerWonToString();
-    }
-
-    public void clearField() {
-        c.clearField();
-    }
-
-    public void checkGewonnen() {
-        c.checkGewonnen();
-    }
-
-    public boolean checkGewonnen(int x, int y, int chip) {
-        return c.checkGewonnen(x, y, chip);
-    }
-
-    public boolean checkInARow(int x, int y, int chip, int length) {
-        return c.checkInARow(x, y, chip, length);
-    }
-
-    public boolean checkInARowWithOffset(int x, int y, int chip, int length, int offset) {
-        return c.checkInARowWithOffset(x, y, chip, length, offset);
-    }
-
-    public boolean checkHorizontal(int x, int y, int chip, int length, int offset) {
-        return c.checkHorizontal(x, y, chip, length, offset);
-    }
-
-    public boolean checkVertical(int x, int y, int chip, int length, int offset) {
-        return c.checkVertical(x, y, chip, length, offset);
-    }
-
-    public boolean checkSidewaysRight(int x, int y, int chip, int length, int offset) {
-        return c.checkSidewaysRight(x, y, chip, length, offset);
-    }
-
-    public boolean checkSidewaysLeft(int x, int y, int chip, int length, int offset) {
-        return c.checkSidewaysLeft(x, y, chip, length, offset);
     }
 
     public String getGameId() {
@@ -237,8 +239,19 @@ public class Match {
         return players;
     }
 
-    public void addPlayer(User user) {
-        user.setColor(YELLOW);
-        players.add(user);
+    public boolean isGameWon() {
+        return gameWon;
+    }
+
+    public int getRed() {
+        return RED;
+    }
+
+    public int getYellow() {
+        return YELLOW;
+    }
+
+    public int getLastSetChip() {
+        return lastChipSet;
     }
 }

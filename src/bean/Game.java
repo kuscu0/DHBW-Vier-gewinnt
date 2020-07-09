@@ -3,6 +3,13 @@ package bean;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * I used the singleton pattern for the game so i can save all users and matches separately
+ * and access them any time.
+ * 
+ * @author Fabian Dittebrand
+ *
+ */
 public class Game {
     private static Game game;
     

@@ -29,6 +29,23 @@ Join a game
 }
 ```
 
+### start gane
+Starts a game
+```
+{
+	"method": "start game"
+}
+```
+
+### connect game
+Connects and reconnets the user to the game.
+```
+{
+	"method": "connect game",
+	"clientId": 1
+}
+```
+
 ### make turn
 User sends his turn to the server.
 ```
@@ -37,6 +54,16 @@ User sends his turn to the server.
 	"clientId": 1,
 	"gameId": 3,
 	"column": 2
+}
+```
+
+### check win
+Checks if the game was won.
+```
+{
+	"method": "check win",
+	"clientId": 2,
+	"gameId": 3
 }
 ```
 
@@ -59,6 +86,17 @@ Confirms that a new game was created.
 }
 ```
 
+### game starting
+Confirms the start of the game
+```
+{
+	"method": "game starting",
+	"clientId": 1,
+	"gameId": 2,
+	"board": [][]
+}
+```
+
 ### turn taken
 Confirms turn and response with Board.
 ```
@@ -69,12 +107,20 @@ Confirms turn and response with Board.
 }
 ```
 
-### game starting
-Confirms the start of the game.
+### game won
+Confirms the player won.
 ```
 {
-	"method": "game starting",
-	"clientId": 1,
+	"method: "game won",
+	"gameId": 1
+}
+```
+
+### game lost
+Confirms the player lost.
+```
+{
+	"method": "game lost",
 	"gameId": 2
 }
 ```

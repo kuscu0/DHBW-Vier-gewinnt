@@ -1,5 +1,11 @@
 package bean.method;
 
+/**
+ * The json class for a new game being created.
+ * 
+ * @author Fabian Dittebrand
+ *
+ */
 public class NewGame {
     private static final String METHOD = "game created";
 

@@ -6,24 +6,20 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 	<link rel="shortcut icon" href="favicon.ico" />
 	<title>Vier gewinnt</title>
 </head>
 <div id="gameCanvas"></div>
+<div id="gameResult"></div>
 <button class="backBtn" onclick="location.href = 'index.jsp';">Zum Hauptmenü</button>
 
 <script src="js/display.js"></script>
-<div style="color: white;" id="test"></div>
-
-
 <body>
 
 </body>
 <script type="text/javascript">
 	const board = sessionStorage.getItem("board");
-
-
 	const clientId = sessionStorage.getItem("clientId");
 	const gameId = sessionStorage.getItem("gameId");
 
@@ -45,22 +41,43 @@
 		}
 	};
 
+	function methodCheckWin() {
+		return {
+			method: "check win",
+			clientId: sessionStorage.getItem("clientId"),
+			gameId: sessionStorage.getItem("gameId")
+		}
+	};
+
 	function handleClientId(clientId) {
 		console.log("Client id " + clientId);
 		sessionStorage.setItem("clientId", clientId);
+	};
+
+	function handleWin() {
+		sessionStorage.clear();
+		document.getElementById("gameResult").innerHTML = "<a style=\"color: white;\" > Game Won </a><br></br>";
+		connection.close();
+	};
+
+	function handleLost() {
+		sessionStorage.clear();
+		document.getElementById("gameResult").innerHTML = "<a style=\"color: white;\" > Game Lost </a><br></br>";
+		connection.close();
 	};
 
 	connection.onopen = function () {
 		console.log("reconnected");
 		console.log(board);
 		connect();
+		checkWin();
 
 		abstractCreateTable(eval(board), document.getElementById("gameCanvas"), "", (column) => {
 			event.preventDefault();
 			console.log("ACTIONNNN " + column);
 			makeTurn(column);
 		});
-	}
+	};
 
 	connection.onmessage = function (message) {
 		const data = message.data;
@@ -80,37 +97,51 @@
 			console.log("turn taken")
 			const board = JSON.stringify(json.board);
 			sessionStorage.setItem("board", board);
-		}
+			location.reload(true);
+		};
+
+		if (method === "game won") {
+			console.log("game won");
+			handleWin();
+		};
+
+		if (method === "game lost") {
+			console.log("game lost");
+			handleLost();
+		};
 
 		if (method === "error") {
 			const errorMessage = json.errorMessage;
 			console.log("error: " + errorMessage);
 			return;
-		}
-	}
+		};
+	};
 
 	connection.onerror = function (error) {
 		console.log("Websocket Error: " + error);
-	}
+	};
 
 	connection.onclose = function (event) {
 		console.log("Connection closed" + event);
-	}
-
-	document.getElementById("test").innerHTML = "<a>" + clientId + "</a><br></br>" +
-		"<a>" + gameId + "</a><br></br>" + board;
-
+	};
 
 	function connect() {
 		console.log("connect");
 		const json = methodConnect();
 		const request = JSON.stringify(json);
 		connection.send(request);
-	}
+	};
 
 	function makeTurn(column) {
 		console.log("make turn");
 		const json = methodMakeTurn(column);
+		const request = JSON.stringify(json);
+		connection.send(request);
+	};
+
+	function checkWin() {
+		console.log("check win");
+		const json = methodCheckWin();
 		const request = JSON.stringify(json);
 		connection.send(request);
 	};
