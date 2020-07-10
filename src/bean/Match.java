@@ -17,6 +17,7 @@ public class Match {
     private final int WHITE = 0;
     private final int RED = 1;
     private final int YELLOW = 2;
+    private final int animationOffset = 2;
     private int lastChipSet = 0;
     private int[][] board = new int[6][7];
     private final String gameId;
@@ -95,7 +96,8 @@ public class Match {
 
     /**
      * Sets the chip into the board by the given column. Saves the last turn by
-     * saving the color of the player in lastChipSet.
+     * saving the color of the player in lastChipSet. Adds animation offset to the chip
+     * and subtracts it again at the beginning.
      * 
      * @param column
      * @param color
@@ -107,11 +109,13 @@ public class Match {
             final String error = WebSocket.gson.toJson(errorJson);
             return error;
         }
+        
+        eraseAnimationOffset(board);
 
         for (int row = 5; row >= 0; row--) {
             if (row == 5) {
                 if (board[row][column] == 0) {
-                    board[row][column] = color;
+                    board[row][column] = color + animationOffset;
                     break;
                 }
             }
@@ -124,7 +128,7 @@ public class Match {
                 }
 
                 if (board[row - 1][column] == 0) {
-                    board[row - 1][column] = color;
+                    board[row - 1][column] = color + animationOffset;
                     break;
                 }
             }
@@ -141,15 +145,21 @@ public class Match {
     /**
      * Checks if the game has been won and returns true or false; If the game is
      * won, the gameWon variable is set to true.
+     * erasing animation offset and adding it again for win condition.
      * 
      * @param board
      * @return true or false
      */
-    public boolean checkWin(int[][] board) {
+    private boolean checkWin(int[][] board) {
+        int[][] animatedBoardTmp = board;
+        eraseAnimationOffset(board);
+        
         if (checkVertical(board) || checkHorizontal(board) || checkDiagonal(board)) {
             gameWon = true;
+            board = animatedBoardTmp;
             return true;
         }
+        board = animatedBoardTmp;
         return false;
     }
 
@@ -221,6 +231,23 @@ public class Match {
             }
         }
         return false;
+    }
+    
+    /**
+     * Erases the animation offset of the board.
+     * @param board
+     * @return board
+     */
+    private int[][] eraseAnimationOffset(int[][] board) {
+        //Subtracts the animationOffset.
+        for(int col = 0; col < 7; col++) {
+            for(int row = 0; row < 6; row++) {
+                if(board[row][col] == 3 || board[row][col] == 4) {
+                    board[row][col] -=  animationOffset;
+                }
+            }
+        }
+        return board;
     }
 
     /**
